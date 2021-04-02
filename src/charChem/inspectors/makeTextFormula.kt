@@ -3,6 +3,7 @@ package charChem.inspectors
 import charChem.compiler.ChemCompiler
 import charChem.core.*
 import charChem.textRules.RulesBase
+import charChem.textRules.rulesText
 
 data class CtxItem(var text: String = "", var neg: Boolean = false)
 
@@ -11,7 +12,7 @@ data class CtxItem(var text: String = "", var neg: Boolean = false)
  * Не все формулы могут быть представлены в виде текста.
  * Поэтому перед вызовом этой функции нужно использовать isTextFormula
  */
-fun makeTextFormula(obj: ChemObj, rules: RulesBase): String {
+fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
     val stack = mutableListOf(CtxItem())
     var first: Boolean = true
     fun ctxOut(text: String) {
@@ -79,6 +80,10 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase): String {
 
         override fun radical(obj: ChemRadical) {
             ctxOut(rules.radical(obj.label))
+        }
+
+        override fun bond(obj: ChemBond) {
+            ctxOut(obj.tx)
         }
     })
     return stack[0].text

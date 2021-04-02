@@ -15,14 +15,15 @@ fun isEmptyNode(node: ChemNode): Boolean {
     }).isStop
 }
 
-class ChemNode(val pt: Point = Point()) : ChemObj(), ChemChargeOwner {
+class ChemNode(var pt: Point = Point()) : ChemObj(), ChemChargeOwner {
     override var charge: ChemCharge? = null
     val items: MutableList<ChemNodeItem> = mutableListOf()
     var index: Int = -1 // index of node in CAgent.nodes array
     var chain: Int = 0  // chain number
-    var subChain: Int = 0
+    var chainGroup: Int = 0
     var autoMode: Boolean = false
-    var bonds: MutableList<ChemBond> = mutableListOf()
+    var bonds: MutableSet<ChemBond> = mutableSetOf()
+    var fixed: Boolean = false
 
     override fun walk(visitor: Visitor) {
         visitor.nodePre(this)

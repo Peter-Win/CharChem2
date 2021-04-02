@@ -1,15 +1,18 @@
 package charChem.compiler
 
+import charChem.compiler.chains.ChainBox
 import charChem.compiler.state.*
 import charChem.core.*
 import charChem.lang.LangParams
+import charChem.math.Point
+import charChem.inspectors.makeTextFormula
 
 // Usage example:
 // val expr = ChemCompiler("H2O").exec()
 
 typealias CompilerState = (c: ChemCompiler) -> Int
 
-class ChemCompiler(private val sourceText: String) {
+public class ChemCompiler(private val sourceText: String) {
     private val expr: ChemExpr = ChemExpr()
     var pos: Int = 0
     var text: String = ""
@@ -17,6 +20,8 @@ class ChemCompiler(private val sourceText: String) {
     var curEntity: ChemObj? = null
     var curAgent: ChemAgent? = null
     var curNode: ChemNode? = null
+    var curBond: ChemBond? = null
+    var prevBond: ChemBond? = null
     var prefixK: ChemK? = null
     var curPart: Int = 0    // Номер части в хим выражении. Части разделяются операциями с признаком eq, н.р. = или ->
     var elemStartPos: Int = 0
@@ -25,6 +30,12 @@ class ChemCompiler(private val sourceText: String) {
     var commentPre: ChemComment? = null
     var specMass: Double = 0.0 // special mass for next element - $M()
     var customAtomNumber: Int? = null // number in $nM(mass, number)
+    var chainBox: ChainBox = ChainBox()
+    var userSlope: Double = 0.0  // result of $slope(). Not used, if 0
+
+    fun resetVariables() {
+        userSlope = 0.0
+    }
 
     fun exec(): ChemExpr {
         try {
@@ -120,22 +131,26 @@ class ChemCompiler(private val sourceText: String) {
 
     fun closeAgent() {
         curAgent?.let { agent ->
-            closeNode()
+            closeChain()
+            chainBox.clear()
             prefixK?.let {
                 agent.n = it
                 prefixK = null
             }
+            resolveAutoNodes(agent)
             curAgent = null
+            resetVariables()
         }
     }
 
-    fun getForcedNode(): ChemNode {
-        return curNode ?: openNode()
+    fun getForcedNode(isAuto: Boolean = false): ChemNode {
+        return curNode ?: openNode(isAuto)
     }
 
-    fun openNode(): ChemNode {
+    fun openNode(isAuto: Boolean = false): ChemNode {
         closeNode()
         val node = curAgent!!.addNode(ChemNode())
+        node.autoMode = isAuto
         curNode = node
         chargeOwner = node
         return node
@@ -148,8 +163,41 @@ class ChemCompiler(private val sourceText: String) {
             curNode = null
         }
     }
+
+    fun closeBond() {
+        curBond?.let { bond ->
+            prevBond = bond
+            if (bond.nodes[1] == null) {
+                bond.nodes[1] = getForcedNode(true)
+            }
+            // Если оба узла автоматические, то мягкая связь становится жесткой
+            if (bond.soft) {
+                val node0 = bond.nodes[0]
+                val node1 = bond.nodes[1]
+                if (node0 != null && node0.autoMode && node1 != null && node1.autoMode) {
+                    bond.soft = false
+                }
+            }
+            if (!bond.soft) {
+                // Если не мягкая связь, то вычислить координаты второго узла
+                bond.nodes[1]?.let { node1 ->
+                    bond.nodes[0].let { node0 ->
+                        node1.pt = bond.calcPt()
+                    }
+                }
+            }
+            curBond = null
+        }
+    }
+
+    fun closeChain() {
+        closeBond()
+        closeNode()
+        prevBond = null
+    }
+
     fun closeItem() {
-        getLastItem()?.let{
+        getLastItem()?.let {
             if (it.atomNum == -1) {
                 it.walk(object : Visitor() {
                     override fun atom(obj: ChemAtom) {

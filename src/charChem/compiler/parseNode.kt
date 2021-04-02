@@ -15,6 +15,10 @@ fun parseNode(compiler: ChemCompiler): Int {
         compiler.elemStartPos = compiler.pos
         return compiler.setState(::stateElement, 1)
     }
+    if (c in BondDefs.starts) {
+        createBondShort(compiler)
+        return compiler.setState(::stateAgentMid)
+    }
     // Признак изменения поведения следующей конструкции
     if (c == '`') {
         compiler.isNegChar = true

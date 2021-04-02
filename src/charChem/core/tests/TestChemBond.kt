@@ -12,7 +12,7 @@ class TestChemBond {
     fun testCalcPt() {
         val bond = ChemBond()
         bond.nodes[0] = ChemNode(Point(1.0, 2.0))
-        bond.pt = Point(2.0, 1.0)
+        bond.dir = Point(2.0, 1.0)
         val p2: Point = bond.calcPt()
         assertEquals(p2, Point(3.0, 3.0))
     }
