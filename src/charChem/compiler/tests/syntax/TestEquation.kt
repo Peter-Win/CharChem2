@@ -21,14 +21,14 @@ class TestEquation {
 
         assertTrue(e1 is ChemOp)
         assertEquals(e1.srcText, "+")
-        assertFalse(e1.eq)
+        assertFalse(e1.div)
 
         assertTrue(e2 is ChemAgent)
         assertEquals(e2.part, 0)
 
         assertTrue(e3 is ChemOp)
         assertEquals(e3.srcText, "->")
-        assertTrue(e3.eq)
+        assertTrue(e3.div)
 
         assertTrue(e4 is ChemAgent)
         assertEquals(e4.part, 1)

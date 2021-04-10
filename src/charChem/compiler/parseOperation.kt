@@ -46,7 +46,7 @@ fun parseOperation(compiler: ChemCompiler): Int {
         op.updateFirstBound(it.getBoundsBegin())
         compiler.commentPre = null
     }
-    if (op.eq) {
+    if (op.div) {
         compiler.curPart++
     }
     compiler.pos = pos1

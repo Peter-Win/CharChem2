@@ -1,6 +1,6 @@
 package charChem.inspectors
 
-import charChem.compiler.ChemCompiler
+import charChem.compiler2.compile
 import charChem.core.*
 import charChem.textRules.RulesBase
 import charChem.textRules.rulesText
@@ -90,7 +90,7 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
 }
 
 fun makeTextFormula(sourceText: String, rules: RulesBase): String {
-    val expr = ChemCompiler(sourceText).exec()
+    val expr = compile(sourceText)
     if (!expr.isOk())
         return ""
     return makeTextFormula(expr, rules)

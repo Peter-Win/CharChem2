@@ -1,0 +1,18 @@
++ Atom - TestItem
++ Item coefficient: H2 - TestItem
++ Abstract item coeff: C'n'H'2n+2' - TestItem
++ Custom item: {R}OH - TestItem
++ Comment item: C"(solid)" - TestComment
++ Comment with translations: NaCl"`(aq)`" - TestComment
++ Comment with greek chars: S"|v" - TestComment
++ Comment before agent: "|^"F2 - TestComment
++ Comment before operation - TestOp
++ Radical without {}: Et2O - TestRadical
++ Radical with {}: {i-Bu}OH - TestRadical
+
++ Operations: H2 + O2 = H2O - TestOp
++ Operation with comments: "T"->"-[Delta]" - TestOp
+
+- 2H2 - agent coeff
+- 2Fe2O3*3H2O - multiplier coeff
+- 2(2Fe2O3*3H2O) - agent coeff and multipliers

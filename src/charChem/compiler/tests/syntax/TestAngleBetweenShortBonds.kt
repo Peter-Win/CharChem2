@@ -1,10 +1,11 @@
 package charChem.compiler.tests.syntax
 
-import charChem.compiler.ChemCompiler
+//import charChem.compiler.ChemCompiler
 import charChem.compiler.tests.getBonds
-import charChem.core.ChemBond
-import charChem.core.ChemObj
-import charChem.core.Visitor
+import charChem.compiler.ChemCompiler
+//import charChem.core.ChemBond
+//import charChem.core.ChemObj
+//import charChem.core.Visitor
 import charChem.math.Point
 import charChem.math.pointFromDeg
 import org.testng.annotations.Test

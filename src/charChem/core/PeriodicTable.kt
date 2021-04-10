@@ -21,6 +21,8 @@ object PeriodicTable {
     val isotopesDict = isotopes.associateBy { it.id }
 
     val H: ChemAtom by lazy { list[0] }
+    val D: ChemAtom by lazy { isotopes[0] }
+    val T: ChemAtom by lazy { isotopes[1] }
     val He: ChemAtom by lazy { list[1] }
     val Li: ChemAtom by lazy { list[2] }
     val Be: ChemAtom by lazy { list[3] }
@@ -30,6 +32,14 @@ object PeriodicTable {
     val O: ChemAtom by lazy { list[7] }
     val F: ChemAtom by lazy { list[8] }
     val Ne: ChemAtom by lazy { list[9] }
+    val Na: ChemAtom by lazy { list[10] }
+    val Mg: ChemAtom by lazy { list[11] }
+    val Al: ChemAtom by lazy { list[12] }
+    val Si: ChemAtom by lazy { list[13] }
+    val P: ChemAtom by lazy { list[14] }
+    val S: ChemAtom by lazy { list[15] }
+    val Cl: ChemAtom by lazy { list[16] }
+    val Ar: ChemAtom by lazy { list[17] }
 
     private val shortDef = listOf(
             "H,1.008", "He,4.003",
