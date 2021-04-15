@@ -17,10 +17,25 @@ class ChemCompiler(val srcText: String) {
     var curOp: ChemOp? = null
     var curAgent: ChemAgent? = null
     var curNode: ChemNode? = null
+    var curBond: ChemBond? = null
     var curPart: Int = 0
     var elementStartPos: Int = 0
     var preComm: ChemComment? = null
     val chainSys: ChainSys = ChainSys(this)
+    val references = mutableMapOf<String, ChemNode>()
+
+    private var _altFlag: Boolean = false
+    fun setAltFlag() {
+        _altFlag = true
+    }
+    fun getAltFlag(): Boolean {
+        val value = _altFlag
+        _altFlag = false
+        return value
+    }
+
+    var varSlope: Double = 0.0
+    var varLength: Double = 0.0
 
     fun curChar(): Char = text[pos]
     fun subStr(startPos: Int): String = text.substring(startPos, pos)

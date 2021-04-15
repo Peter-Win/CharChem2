@@ -55,6 +55,11 @@ class PointTest {
     }
 
     @Test
+    fun testMul() {
+        assertEquals(Point(1.0, 2.0) * 3.0, Point(3.0, 6.0))
+    }
+
+    @Test
     fun testMinus() {
         var a = Point(11.1, 22.2)
         a -= Point(1.1, 2.2)

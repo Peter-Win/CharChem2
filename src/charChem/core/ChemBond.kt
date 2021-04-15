@@ -12,7 +12,7 @@ class ChemBond() : ChemObj() {
 
     var dir: Point? = null  // bond vector
     var tx: String = "" // text description
-    var slope: Double = 0.0 // для связи, созданной из описания / = -1, для \ = 1, для остальных =0
+    var slope: Int = 0 // для связи, созданной из описания / = -1, для \ = 1, для остальных =0
     var isText: Boolean = false
     var color: String = "" // цвет связи
     var w0: Int = 0 // Толщина начала линии, 0 для обычной толщины, 1 для жирной
@@ -29,7 +29,7 @@ class ChemBond() : ChemObj() {
     var isCorr: Boolean = false // Выполнена коррекция наклона с 30 до 60 градусов
 
     // Position calculate for second part of bond
-    fun calcPt() = nodes[0]!!.pt + dir!!
+    fun calcPt(): Point = nodes[0]!!.pt + dir!!
 
     // Get another node of bond
     fun other(node: ChemNode): ChemNode? {

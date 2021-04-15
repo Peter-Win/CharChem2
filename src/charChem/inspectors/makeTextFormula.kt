@@ -14,7 +14,7 @@ data class CtxItem(var text: String = "", var neg: Boolean = false)
  */
 fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
     val stack = mutableListOf(CtxItem())
-    var first: Boolean = true
+    var first = true
     fun ctxOut(text: String) {
         stack[0].text += text
     }
@@ -33,6 +33,8 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
             ctxOut(rules.nodeCharge(it))
         }
     }
+    var autoNode = false
+
     obj.walk(object: Visitor() {
         override fun agentPre(obj: ChemAgent) {
             space()
@@ -42,7 +44,9 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
         }
 
         override fun atom(obj: ChemAtom) {
-            ctxOut(rules.atom(obj.id))
+            if (!autoNode) {
+                ctxOut(rules.atom(obj.id))
+            }
         }
 
         override fun comment(obj: ChemComment) {
@@ -54,6 +58,7 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
         }
 
         override fun itemPre(obj: ChemNodeItem) {
+            if (autoNode) return
             if (obj.atomNum != null) {
                 // Вывести двухэтажную конструкцию: масса/атомный номер слева от элемента
                 ctxOut(rules.itemMassAndNum(obj.mass, obj.atomNum!!))
@@ -62,15 +67,20 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
             }
         }
         override fun itemPost(obj: ChemNodeItem) {
+            if (autoNode) return
             if (obj.n.isSpecified())
                 ctxOut(rules.itemCount(obj.n))
         }
 
         override fun nodePre(obj: ChemNode) {
             drawCharge(obj.charge, true)
+            if (obj.autoMode) {
+                autoNode = true
+            }
         }
         override fun nodePost(obj: ChemNode) {
             drawCharge(obj.charge, false)
+            autoNode = false
         }
 
         override fun operation(obj: ChemOp) {

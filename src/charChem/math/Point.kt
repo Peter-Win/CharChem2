@@ -33,15 +33,21 @@ class Point(var x: Double = 0.0, var y: Double = 0.0) {
     operator fun minus(pt: Point): Point =
             Point(x - pt.x, y - pt.y)
 
-    fun mini(pt: Point): Unit {
+    operator fun times(k: Double): Point =
+            Point(k * x, k * y)
+
+    fun mini(pt: Point) {
         x = min(x, pt.x)
         y = min(y, pt.y)
     }
 
-    fun maxi(pt: Point): Unit {
+    fun isZero(): Boolean = is0(x) && is0(y)
+
+    fun maxi(pt: Point) {
         x = max(x, pt.x)
         y = max(y, pt.y)
     }
+
     fun polarAngle(): Double {
         if (x==0.0 && y==0.0)
             return 0.0

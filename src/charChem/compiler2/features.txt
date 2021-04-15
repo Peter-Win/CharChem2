@@ -13,6 +13,20 @@
 + Operations: H2 + O2 = H2O - TestOp
 + Operation with comments: "T"->"-[Delta]" - TestOp
 
++ Simple bond: H3C-CH3 - TestSimpleBond
++ Auto nodes: /\ - TestSimpleBond
++ Difference between hard and soft bonds: - (hard bond) - TestSimpleBond
++ Cyclic simple bonds: -|`-`| - TestSimpleBond
++ Merge of bonds: |-`|`-|, -|-`|`-`-     - TestSimpleBond
+- Suffixes of simple bond (0 o ~ w ww d dd h x v vv vvv)
+- Charge of node
+
++ Spaces in reagent: "H3C# -CH2#\n -OH" - TestReference
++ Use reference by node number, chain break: H-C-H; H|#2|H - TestReference
++ Use reference by negative number: H-N-H; H|#-3  - TestReference
++ Use label and reference by label: Cl-C:center-Cl; O||#center  - TestReference
+- Use subchains with soft nodes
+
 - 2H2 - agent coeff
 - 2Fe2O3*3H2O - multiplier coeff
 - 2(2Fe2O3*3H2O) - agent coeff and multipliers

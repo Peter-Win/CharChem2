@@ -5,8 +5,6 @@ import charChem.compiler2.main.OpDef
 import charChem.compiler2.main.opsList
 
 fun scanOp(compiler: ChemCompiler): OpDef? {
-    val text = compiler.text
-    val pos = compiler.pos
     val res = opsList.find{ compiler.isCurPosEq(it.src) }
     if (res != null) {
         compiler.pos += res.src.length

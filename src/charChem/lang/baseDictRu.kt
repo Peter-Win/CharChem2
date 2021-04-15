@@ -35,6 +35,8 @@ val baseDictRu: Map<String, String> = mapOf(
             "Не определена числовая переменная '[name]' в позиции [pos]",
     "Invalid node reference '[ref]'" to
             "Неправильная ссылка на узел '[ref]' в позиции [pos]",
+    "Invalid label" to
+            "Неправильная метка в позиции [pos]",
     "Invalid branch close" to
             "Нельзя закрыть ветку в позиции [pos], которая не открыта",
     "Cant close branch before bracket" to
