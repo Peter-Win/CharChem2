@@ -1,20 +1,23 @@
 package charChem.inspectors.tests
 
-import charChem.compiler.ChemCompiler
+import charChem.compiler.compile
 import charChem.inspectors.calcCharge
+import charChem.inspectors.makeTextFormula
+import charChem.textRules.rulesHtml
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 
 class TestCalcCharge {
     @Test
     fun testSingle() {
-        val expr = ChemCompiler("NH4^+").exec()
+        val expr = compile("NH4^+")
         assertEquals(expr.getMessage(), "")
         assertEquals(calcCharge(expr), 1.0)
+        assertEquals(makeTextFormula(expr, rulesHtml), "NH<sub>4</sub><sup>+</sup>")
     }
     @Test
     fun testExpr() {
-        val expr = ChemCompiler("2Na^+ + SO4^2-").exec()
+        val expr = compile("2Na^+ + SO4^2-")
         assertEquals(expr.getMessage(), "")
         val agents = expr.getAgents()
         assertEquals(agents.size, 2)
@@ -27,7 +30,7 @@ class TestCalcCharge {
     }
     @Test
     fun testAbstract() {
-        val expr = ChemCompiler("'n'H^+ + O^--").exec()
+        val expr = compile("'n'H^+ + O^--")
         assertEquals(expr.getMessage(), "")
         val agents = expr.getAgents()
         assertEquals(agents.size, 2)

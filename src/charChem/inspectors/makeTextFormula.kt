@@ -1,11 +1,21 @@
 package charChem.inspectors
 
-import charChem.compiler2.compile
+import charChem.compiler.compile
 import charChem.core.*
 import charChem.textRules.RulesBase
 import charChem.textRules.rulesText
 
 data class CtxItem(var text: String = "", var neg: Boolean = false)
+
+fun locateAtomNumber(item: ChemObj): Int {
+    var number = 0
+    item.walk(object: Visitor() {
+        override fun atom(obj: ChemAtom) {
+            number = obj.n
+        }
+    })
+    return number
+}
 
 /**
  * Сформировать текстовое представление химической формулы.
@@ -59,9 +69,11 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
 
         override fun itemPre(obj: ChemNodeItem) {
             if (autoNode) return
-            if (obj.atomNum != null) {
+            val rawAtomNum = obj.atomNum
+            if (rawAtomNum != null) {
                 // Вывести двухэтажную конструкцию: масса/атомный номер слева от элемента
-                ctxOut(rules.itemMassAndNum(obj.mass, obj.atomNum!!))
+                val atomNum = if (rawAtomNum >= 0) rawAtomNum else locateAtomNumber(obj)
+                ctxOut(rules.itemMassAndNum(obj.mass, atomNum))
             } else if (obj.mass != 0.0) {
                 ctxOut(rules.itemMass(obj.mass))
             }

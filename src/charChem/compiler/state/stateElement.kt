@@ -1,20 +1,20 @@
 package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.addNodeItem
+import charChem.compiler.main.addNodeItem
+import charChem.compiler.parse.scan
 import charChem.core.ChemRadical
 import charChem.core.ChemSubObj
 import charChem.core.findElement
 
+// Извлечение элемента. Позиция первого символа elementStartPos
 fun stateElement(compiler: ChemCompiler): Int {
-    while (!compiler.isFinish() && compiler.curChar() in 'a'..'z') compiler.pos++
-    val elemId = compiler.subStr(compiler.elemStartPos)
-    val elem: ChemSubObj = findElement(elemId)
-            ?: ChemRadical.dict[elemId]
-            ?: compiler.error(
-                    "Unknown element '[Elem]'",
-                    listOf("pos" to compiler.elemStartPos, "Elem" to elemId)
-            )
+    scan(compiler) { it in 'a'..'z' }
+    val id = compiler.subStr(compiler.elementStartPos)
+    val elem: ChemSubObj = findElement(id) ?: ChemRadical.dict[id] ?: compiler.error(
+            "Unknown element '[Elem]'",
+            listOf("pos" to compiler.elementStartPos, "Elem" to id)
+    )
     addNodeItem(compiler, elem)
     return compiler.setState(::statePostItem)
 }

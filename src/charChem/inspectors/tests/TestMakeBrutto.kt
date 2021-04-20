@@ -1,6 +1,6 @@
 package charChem.inspectors.tests
 
-import charChem.compiler2.compile
+import charChem.compiler.compile
 import charChem.inspectors.calcMass
 import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula

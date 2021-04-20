@@ -1,18 +1,26 @@
 package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.parseOperation
+import charChem.compiler.main.createChemOp
+import charChem.compiler.parse.scanOp
+import charChem.compiler.parse.skipSpaces
 
 fun stateBegin(compiler: ChemCompiler): Int {
-    compiler.closeEntity()
-    val c = compiler.skipSpace()
-    if (compiler.isFinish())
+    skipSpaces(compiler)
+    if (compiler.isFinish()) {
         return 0
-    if (c == '"')
+    }
+
+    if (compiler.curChar() == '"') {
         return compiler.setState(::stateCommentPre, 1)
-    val opResult = parseOperation(compiler)
-    if (opResult >= 0)
-        return opResult
+    }
+
+    val opDef = scanOp(compiler)
+    if (opDef != null) {
+        createChemOp(compiler, opDef)
+        return compiler.setState(::stateOpEnd)
+    }
+
     // Иначе считаем, что это начало реагента
     return compiler.setState(::stateAgent)
 }

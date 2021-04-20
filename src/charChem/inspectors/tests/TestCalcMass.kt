@@ -1,17 +1,16 @@
 package charChem.inspectors.tests
 
-import charChem.compiler.ChemCompiler
+import charChem.compiler.compile
 import charChem.core.*
 import charChem.inspectors.calcMass
 import org.testng.annotations.Test
-import java.lang.StringBuilder
 import kotlin.test.assertEquals
 
 class TestCalcMass {
     @Test
     fun testAtom() {
         val massLi = PeriodicTable.Li.mass
-        val expr = ChemCompiler("Li").exec()
+        val expr = compile("Li")
         assertEquals(expr.getMessage(), "")
         val agent: ChemAgent = expr.getAgents()[0]
         val node: ChemNode = agent.nodes[0]
@@ -26,7 +25,7 @@ class TestCalcMass {
         val massH = PeriodicTable.list[0].mass
         val massO = PeriodicTable.O.mass
         val massH2O = massH * 2 + massO
-        val expr = ChemCompiler("5H2O ").exec()
+        val expr = compile("5H2O ")
         assertEquals(expr.getMessage(), "")
         val agent = expr.getAgents()[0]
         assertEquals(agent.nodes.size, 1)
@@ -47,7 +46,7 @@ class TestCalcMass {
     }
     @Test
     fun testRadical() {
-        val expr = ChemCompiler("Me2O").exec()
+        val expr = compile("Me2O")
         assertEquals(expr.getMessage(), "")
         val massH = PeriodicTable.H.mass
         val massC = PeriodicTable.C.mass
@@ -57,7 +56,7 @@ class TestCalcMass {
     }
     @Test
     fun testMultiAgent() {
-        val expr = ChemCompiler("2H2 + O2 = 2H2O").exec()
+        val expr = compile("2H2 + O2 = 2H2O")
         assertEquals(expr.getMessage(), "")
         val agents = expr.getAgents()
         assertEquals(agents[0].n.num, 2.0)

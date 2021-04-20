@@ -1,21 +1,13 @@
 package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.scanCoeff
-import charChem.compiler.scanOxidation
+import charChem.compiler.main.getLastItem
+import charChem.compiler.parse.scanCoeff
 
 fun statePostItem(compiler: ChemCompiler): Int {
-    val oxid = scanOxidation(compiler)
-    if (oxid != null) {
-        compiler.getLastItem()!!.charge = oxid
-        return 0
-    }
-
     val k = scanCoeff(compiler)
     if (k != null) {
-        compiler.getLastItem()!!.n = k
-        return 0
+        getLastItem(compiler)!!.n = k
     }
-
     return compiler.setState(::stateAgentMid)
 }

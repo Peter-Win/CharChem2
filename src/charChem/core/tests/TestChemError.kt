@@ -9,6 +9,7 @@ import kotlin.test.assertFails
 class TestChemError {
     @Test
     fun testChemError() {
+        Lang.curLang = "en"
         val err = assertFails {
             throw ChemError("Unexpected '[C]'", listOf("C" to "?", "pos" to 11))
         }

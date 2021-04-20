@@ -1,10 +1,8 @@
 package charChem.compiler.funcs
 
 import charChem.compiler.ChemCompiler
+import charChem.compiler.parse.parseNum
 
-const val degToRad = Math.PI / 180.0
-
-fun funcSlope(compiler: ChemCompiler, args: List<String>, pos: List<Int>): Unit {
-    compiler.userSlope = if (args.isEmpty()) 0.0
-        else args[0].toDoubleOrNull() ?.let { it * degToRad } ?: 0.0
+fun funcSlope(compiler: ChemCompiler, args: List<String>, pos: List<Int>) {
+    compiler.varSlope = if (args.isEmpty()) 0.0 else parseNum(compiler, args[0], pos[0])
 }

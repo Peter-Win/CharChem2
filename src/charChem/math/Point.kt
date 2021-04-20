@@ -56,4 +56,9 @@ class Point(var x: Double = 0.0, var y: Double = 0.0) {
         return atan2(y, x)
     }
     fun polarAngleDeg() = polarAngle() * 180.0 / Math.PI
+
+    // Square of length
+    fun lengthSqr(): Double = x * x + y * y
+
+    fun length(): Double = sqrt(lengthSqr())
 }
