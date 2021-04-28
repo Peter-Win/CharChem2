@@ -41,6 +41,8 @@ val baseDictRu: Map<String, String> = mapOf(
             "Нельзя закрыть ветку в позиции [pos], которая не открыта",
     "Cant close branch before bracket" to
             "Нельзя закрыть ветку в позиции [pos], пока не закрыта скобка в позиции [pos0]",
+    "Cant close bracket before branch" to
+            "Нельзя закрыть скобку в позиции [pos], пока не закрыта ветка в позиции [pos0]",
     "Invalid bracket close" to
             "Нет пары для скобки, закрытой в позиции [pos]",
     "It is necessary to close the branch" to

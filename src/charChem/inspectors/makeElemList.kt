@@ -25,6 +25,12 @@ fun makeElemList(obj: ChemObj): ElemList {
             stack[0].charge += obj.charge?.value ?: 0.0
         }
 
+        override fun bracketBegin(obj: ChemBracketBegin) = push()
+        override fun bracketEnd(obj: ChemBracketEnd) {
+            stack[0].charge += obj.charge?.value ?: 0.0
+            pop(obj.n.num)
+        }
+
         override fun itemPre(obj: ChemNodeItem) = push()
         override fun itemPost(obj: ChemNodeItem) = pop(obj.n.num)
         override fun atom(obj: ChemAtom) {

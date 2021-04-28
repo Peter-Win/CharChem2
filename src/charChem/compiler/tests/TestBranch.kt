@@ -46,24 +46,24 @@ class TestBranch {
     @Test
     fun testSubChainInBranch() {
         // 2-Pentanol         Nodes         SubChain
-        // H3C-+---           0~~1---5      1--2--2
+        // H3C-+---           0--1--5       1--1--1
         //     |                 |             |
-        //     +-CH2-CH3         2~~3~~4       2--3--4
+        //     +-CH2-CH3         2--3~~4       1--1--2
         val expr = compile("H3C-<|-CH2-CH3>-")
         assertEquals(expr.getMessage(), "")
         val n = expr.getAgents()[0].nodes
         assertEquals(n.size, 6)
-        assertTrue(n[0].subChain < n[1].subChain)
+        assertEquals(n[0].subChain, n[1].subChain)
         assertEquals(n[1].subChain, n[2].subChain)
-        assertTrue(n[2].subChain < n[3].subChain)
+        assertEquals(n[2].subChain, n[3].subChain)
         assertTrue(n[3].subChain < n[4].subChain)
         assertEquals(n[1].subChain, n[5].subChain)
         assertEquals(n[0].pt, Point())
-        assertEquals(n[1].pt, Point())
-        assertEquals(n[2].pt, Point(0.0, 1.0))
-        assertEquals(n[3].pt, Point())
+        assertEquals(n[1].pt, Point(1.0, 0.0))
+        assertEquals(n[2].pt, Point(1.0, 1.0))
+        assertEquals(n[3].pt, Point(2.0, 1.0))
         assertEquals(n[4].pt, Point())
-        assertEquals(n[5].pt, Point(1.0, 0.0))
+        assertEquals(n[5].pt, Point(2.0, 0.0))
     }
     @Test
     fun testNotClosed() {
@@ -76,5 +76,21 @@ class TestBranch {
         val expr = compile("/>")
         Lang.curLang = "ru"
         assertEquals(expr.getMessage(), "Нельзя закрыть ветку в позиции 2, которая не открыта")
+    }
+    @Test
+    fun testAlternativeSyntax() {
+        // a---b---d
+        //     |
+        //     c
+        val expr = compile("-(*|OH*)-")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C3H8O")
+        val nodes = expr.getAgents()[0].nodes
+        assertEquals(nodes.size, 4)
+        val (a, b, c, d) = nodes
+        assertEquals(a.pt, Point())
+        assertEquals(b.pt, Point(1.0, 0.0))
+        assertEquals(c.pt, Point(1.0, 1.0))
+        assertEquals(d.pt, Point(2.0, 0.0))
     }
 }

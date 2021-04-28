@@ -81,8 +81,24 @@ fun agentAnalyse(compiler: ChemCompiler, onDefault: () -> Int): Int {
             openBranch(compiler)
         '>' ->
             closeBranch(compiler)
+        '(' ->
+            openParentheses(compiler)
+        '[' ->
+            openSquareBracket(compiler)
+        ')', ']' ->
+            closeBracketShort(compiler)
+        '*' ->
+            star(compiler)
         else -> onDefault()
     }
+}
+
+fun star(compiler: ChemCompiler): Int {
+    compiler.pos++
+    if (compiler.curChar() == ')') {
+        return closeBranch(compiler)
+    }
+    compiler.error("Not implemented", listOf())
 }
 
 fun finalUpdateBondsForNodes(agent: ChemAgent) {

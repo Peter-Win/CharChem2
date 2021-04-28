@@ -1,9 +1,6 @@
 package charChem.inspectors
 
-import charChem.core.ChemAgent
-import charChem.core.ChemNode
-import charChem.core.ChemObj
-import charChem.core.Visitor
+import charChem.core.*
 
 /**
  * Вычисление заряда объекта.
@@ -25,8 +22,13 @@ fun calcCharge(obj: ChemObj): Double {
     obj.walk(object : Visitor() {
         override fun agentPre(obj: ChemAgent) = push()
         override fun agentPost(obj: ChemAgent) = pop { obj.n.num }
+        override fun bracketBegin(obj: ChemBracketBegin) = push()
+        override fun bracketEnd(obj: ChemBracketEnd) {
+            obj.charge?.let { stack[0] += it.value }
+            pop { obj.n.num }
+        }
 
-        // TODO: Пока нет поддержки скобок и множителей
+        // TODO: Пока нет поддержки множителей
 
         override fun nodePost(obj: ChemNode) {
             // Ниже уровня узла заряд не проверяем

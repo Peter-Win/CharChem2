@@ -4,7 +4,7 @@ import charChem.compiler.ChemCompiler
 import charChem.core.ChemNodeItem
 import charChem.core.ChemSubObj
 
-fun addNodeItem(compiler: ChemCompiler, subObj: ChemSubObj) {
+fun addNodeItem(compiler: ChemCompiler, subObj: ChemSubObj): ChemNodeItem {
     closeItem(compiler)
     val item = ChemNodeItem(subObj)
     if (compiler.varMass != 0.0) {
@@ -13,5 +13,6 @@ fun addNodeItem(compiler: ChemCompiler, subObj: ChemSubObj) {
     }
     item.atomNum = compiler.varAtomNumber
     compiler.varAtomNumber = null
-    getNodeForced(compiler).items.add(item)
+    getNodeForced(compiler, false).items.add(item)
+    return item
 }

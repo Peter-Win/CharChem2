@@ -27,4 +27,11 @@ class TestMakeElemList() {
         val elList = makeElemList(expr)
         assertEquals(elList.toString(), "C3H6O2")
     }
+    @Test
+    fun testBracketsWithCharge() {
+        val expr = compile("[Fe(CN)6]2^3-")
+        assertEquals(expr.getMessage(), "")
+        val elList = makeElemList(expr)
+        assertEquals(elList.toString(), "Fe2C12N12^6-")
+    }
 }

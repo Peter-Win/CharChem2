@@ -7,16 +7,23 @@ val bracketEnds: List<String> = bracketPairs.map { it.value }
 
 class ChemBracketBegin(val text: String) : ChemObj() {
     var end: ChemBracketEnd? = null
+    var isText: Boolean? = null
     // this.nodes = [null, null]
-    // this.bond = null
+    var bond: ChemBond? = null
     override fun walk(visitor: Visitor) {
         visitor.bracketBegin(this)
     }
 }
 
-class ChemBracketEnd(val text: String, val begin: ChemBracketBegin) : ChemObj(), ChemChargeOwner {
+class ChemBracketEnd(
+        val text: String,
+        val begin: ChemBracketBegin,
+        val nodeIn: ChemNode
+        ) : ChemObj(), ChemChargeOwner
+{
     override var charge: ChemCharge? = null
     var n: ChemK = ChemK(1)
+    var bond: ChemBond? = null
     // this.nodes = [null, null]
     // this.bond = null
     override fun walk(visitor: Visitor) {

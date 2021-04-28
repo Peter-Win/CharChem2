@@ -1,6 +1,7 @@
 package charChem.core
 
 import charChem.inspectors.calcMass
+import charChem.lang.Lang
 
 class ChemExpr() : ChemObj() {
     var error: ChemError? = null
@@ -14,7 +15,15 @@ class ChemExpr() : ChemObj() {
     // Check for success. If false, then an error.
     fun isOk(): Boolean = error == null
     // Extended error message. Empty string, if not error
-    fun getMessage(): String = error?.let {it.message} ?: ""
+    fun getMessage(locale: String? = null): String = error?.let { err ->
+        locale?.let {
+            val oldLang = Lang.curLang
+            Lang.curLang = it
+            val msg = err.message
+            Lang.curLang = oldLang
+            msg
+        } ?: err.message
+    } ?: ""
 
     override fun walk(visitor: Visitor) {
         for (entity in entities) {

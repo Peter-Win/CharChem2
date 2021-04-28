@@ -1,15 +1,14 @@
 package charChem.compiler
 
 import charChem.compiler.chain.ChainSys
+import charChem.compiler.main.BracketDecl
+import charChem.compiler.main.StackItem
 import charChem.compiler.parse.prepareText
 import charChem.compiler.state.stateBegin
 import charChem.core.*
 import charChem.lang.LangParams
 
 typealias CompilerState = (c: ChemCompiler) -> Int
-
-class Branch(val pos: Int, val node: ChemNode, val bond: ChemBond?) {
-}
 
 class ChemCompiler(val srcText: String) {
     val expr = ChemExpr()
@@ -27,7 +26,10 @@ class ChemCompiler(val srcText: String) {
     var preComm: ChemComment? = null
     val chainSys = ChainSys(this)
     val references = mutableMapOf<String, ChemNode>()
-    val branchStack = mutableListOf<Branch>()
+
+    private val stack = mutableListOf<StackItem>()
+    fun push(item: StackItem) = stack.add(0, item)
+    fun pop(): StackItem? = if (stack.size == 0) null else stack.removeAt(0)
 
     private var _altFlag: Boolean = false
     fun setAltFlag() {

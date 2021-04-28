@@ -25,7 +25,7 @@ fun openNode(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
     return node
 }
 
-fun getNodeForced(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
+fun getNodeForced(compiler: ChemCompiler, isAuto: Boolean): ChemNode {
     return compiler.curNode ?: openNode(compiler, isAuto)
 }
 

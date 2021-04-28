@@ -2,6 +2,7 @@ package charChem.compiler.main
 
 import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
+import charChem.core.ChemBracketEnd
 import charChem.core.ChemNode
 
 fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
@@ -10,8 +11,8 @@ fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     chemBond.nodes[1] = node
     val node0 = chemBond.nodes[0]
     val auto0: Boolean = node0?.autoMode ?: false
-    // Если оба узла автоматические, то связь не мягкая
-    if (chemBond.soft && auto0 && node.autoMode) {
+    // Если хотя бы один узел автоматический, то связь не мягкая
+    if (chemBond.soft && (auto0 || node.autoMode)) {
         chemBond.soft = false
         compiler.chainSys.changeBondToHard(chemBond)
     }
@@ -37,9 +38,26 @@ fun findBondBetweenNodes(compiler: ChemCompiler, nodeA: ChemNode, nodeB: ChemNod
     }
 }
 
+fun getNodeForBondStart(compiler: ChemCompiler, bond: ChemBond): ChemNode {
+    val curNode = compiler.curNode
+    if (curNode != null) {
+        // Если текущий узел есть, то использовать его
+        return curNode
+    }
+    // Возможна ситуация, когда связь стыкуется к ранее закрытой скобке
+    val bracketEnd: ChemBracketEnd? = compiler.curAgent!!.commands.lastOrNull() ?.let {
+        if (it is ChemBracketEnd) it else null
+    }
+    if (bracketEnd != null) {
+        bracketEnd.bond = bond
+        return  bracketEnd.nodeIn
+    }
+    return openNode(compiler, true)
+}
+
 // Предполагается, что свойства bond уже заполнены. В первую очередь: dir, n
 fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
-    val oldNode = compiler.curNode ?: openNode(compiler, true)
+    val oldNode = getNodeForBondStart(compiler, bond)
     closeNode(compiler)
     bond.nodes[0] = oldNode
     // Здесь можно сделать предположение о том, что связь входит вкакой-либо из узлов своей подцепи

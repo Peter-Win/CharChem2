@@ -105,7 +105,19 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
         }
 
         override fun bond(obj: ChemBond) {
-            ctxOut(obj.tx)
+            ctxOut("${if (obj.isNeg) "`" else ""}${obj.tx}")
+        }
+
+        override fun bracketBegin(obj: ChemBracketBegin) {
+            drawCharge(obj.end?.charge, true)
+            ctxOut(obj.text)
+        }
+
+        override fun bracketEnd(obj: ChemBracketEnd) {
+            ctxOut(obj.text)
+            if (obj.n.isSpecified())
+                ctxOut(rules.itemCount(obj.n))
+            drawCharge(obj.charge, false)
         }
     })
     return stack[0].text

@@ -1,40 +1,45 @@
 package charChem.compiler.main
 
-import charChem.compiler.Branch
 import charChem.compiler.ChemCompiler
 import charChem.compiler.state.stateAgentMid
+import charChem.core.ChemBond
+import charChem.core.ChemNode
 
-// Указатель установлен на символ <
+class BranchDecl(pos: Int, val node: ChemNode, val bond: ChemBond?) : StackItem(pos) {
+    override fun msgInvalidClose() = "It is necessary to close the branch"
+}
+
+// Указатель установлен на символ < или * для случая (*
 fun openBranch(compiler: ChemCompiler): Int {
     if (compiler.curNode == null) {
         openNode(compiler, true)
     }
     compiler.curNode?.let { node ->
-        compiler.branchStack.add(0, Branch(compiler.pos, node, compiler.curBond))
+        compiler.push(BranchDecl(compiler.pos, node, compiler.curBond))
     }
     return compiler.setState(::stateAgentMid, 1)
 }
 
 fun closeBranch(compiler: ChemCompiler): Int {
-    val stack = compiler.branchStack
-    if (stack.size == 0) {
-        compiler.error("Invalid branch close", listOf("pos" to compiler.pos))
-    }
-    val branch = compiler.branchStack[0]
-    compiler.branchStack.removeAt(0)
+    val item = compiler.pop()
+    item?.let { decl ->
+        if (decl !is BranchDecl) {
+            // Ошибка: ветка закрывается до того, как закрыта скобка...
+            compiler.error("Cant close branch before bracket",
+                    listOf("pos" to compiler.pos, "pos0" to decl.pos + 1))
+        }
+        bindNodeToCurrentBond(compiler, compiler.curNode ?: openNode(compiler, true))
+        closeNode(compiler)
 
-    bindNodeToCurrentBond(compiler, compiler.curNode ?: openNode(compiler, true))
-    closeNode(compiler)
+        compiler.curNode = decl.node
+        compiler.chainSys.setCurNode(decl.node)
 
-    compiler.curNode = branch.node
-    compiler.chainSys.setCurNode(branch.node)
-
-    return compiler.setState(::stateAgentMid, 1)
+        return compiler.setState(::stateAgentMid, 1)
+    } ?: compiler.error("Invalid branch close", listOf("pos" to compiler.pos))
 }
 
 fun checkBranch(compiler: ChemCompiler) {
-    if (compiler.branchStack.size > 0) {
-        val pos = compiler.branchStack[0].pos
-        compiler.error("It is necessary to close the branch", listOf("pos" to pos))
+    compiler.pop() ?.let {
+        compiler.error(it.msgInvalidClose(), listOf("pos" to it.pos))
     }
 }

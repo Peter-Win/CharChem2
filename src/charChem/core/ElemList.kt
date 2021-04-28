@@ -6,6 +6,7 @@
  */
 package charChem.core
 
+import charChem.math.is0
 import charChem.math.toa
 import kotlin.math.abs
 
@@ -20,17 +21,25 @@ class ElemRec(val id: String, val elem: ChemAtom?, var n: Double = 1.0) {
 
 fun k2s(k: Double): String = if (k == 1.0) "" else toa(k)
 
+fun makeChargeText(value: Double): String {
+    if (is0(value)) {
+        return ""
+    }
+    val absCharge = abs(value)
+    var text = if (absCharge == 1.0) "" else toa(absCharge)
+    text += if (value < 0) "-" else "+"
+    return text
+}
+
 class ElemList(
         val list: MutableList<ElemRec> = mutableListOf(),
         var charge: Double = 0.0
 ) {
     override fun toString(): String {
         var result: String = list.fold("") { acc, elemRec -> "$acc${elemRec.key}${k2s(elemRec.n)}" }
-        if (charge != 0.0) {
-            val absCharge = abs(charge)
-            val value = if (absCharge == 1.0) "" else toa(absCharge)
-            val sign = if (charge < 0) "-" else "+"
-            result += "^$value$sign"
+        val chargeText = makeChargeText(charge)
+        if (chargeText != "") {
+            result += "^$chargeText"
         }
         return result
     }
@@ -69,7 +78,7 @@ class ElemList(
 
     fun addRadical(radical: ChemRadical) = addList(radical.items)
 
-    fun scale(k: Double): Unit {
+    fun scale(k: Double) {
         if (k != 1.0) {
             charge *= k
             list.forEach { it.n *= k }
@@ -77,7 +86,7 @@ class ElemList(
     }
 
     // sort by Hill system
-    fun sortByHill(): Unit {
+    fun sortByHill() {
         list.sortWith(object : Comparator<ElemRec> {
             override fun compare(a: ElemRec, b: ElemRec): Int {
                 val aid: String = a.id
