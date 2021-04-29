@@ -40,6 +40,24 @@ object PeriodicTable {
     val S: ChemAtom by lazy { list[15] }
     val Cl: ChemAtom by lazy { list[16] }
     val Ar: ChemAtom by lazy { list[17] }
+    val K: ChemAtom by lazy { list[18] }
+    val Ca: ChemAtom by lazy { list[19] }
+    val Sc: ChemAtom by lazy { list[20] }
+    val Ti: ChemAtom by lazy { list[21] }
+    val V: ChemAtom by lazy { list[22] }
+    val Cr: ChemAtom by lazy { list[23] }
+    val Mn: ChemAtom by lazy { list[24] }
+    val Fe: ChemAtom by lazy { list[25] }
+    val Co: ChemAtom by lazy { list[26] }
+    val Ni: ChemAtom by lazy { list[27] }
+    val Cu: ChemAtom by lazy { list[28] }
+    val Zn: ChemAtom by lazy { list[29] }
+    val Ga: ChemAtom by lazy { list[30] }
+    val Ge: ChemAtom by lazy { list[31] }
+    val As: ChemAtom by lazy { list[32] }
+    val Se: ChemAtom by lazy { list[33] }
+    val Br: ChemAtom by lazy { list[34] }
+    val Kr: ChemAtom by lazy { list[35] }
 
     private val shortDef = listOf(
             "H,1.008", "He,4.003",

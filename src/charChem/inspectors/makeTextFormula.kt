@@ -59,6 +59,10 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
             }
         }
 
+        override fun comma(obj: ChemComma) {
+            ctxOut(rules.comma())
+        }
+
         override fun comment(obj: ChemComment) {
             ctxOut(rules.comment(obj.text))
         }
@@ -118,6 +122,11 @@ fun makeTextFormula(obj: ChemObj, rules: RulesBase = rulesText): String {
             if (obj.n.isSpecified())
                 ctxOut(rules.itemCount(obj.n))
             drawCharge(obj.charge, false)
+        }
+
+        override fun mul(obj: ChemMul) {
+            if (!obj.isFirst) ctxOut(rules.mul())
+            ctxOut(rules.mulK(obj.n))
         }
     })
     return stack[0].text

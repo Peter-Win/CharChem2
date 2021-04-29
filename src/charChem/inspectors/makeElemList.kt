@@ -31,6 +31,9 @@ fun makeElemList(obj: ChemObj): ElemList {
             pop(obj.n.num)
         }
 
+        override fun mul(obj: ChemMul) = push()
+        override fun mulEnd(obj: ChemMulEnd) = pop(obj.begin.n.num)
+
         override fun itemPre(obj: ChemNodeItem) = push()
         override fun itemPost(obj: ChemNodeItem) = pop(obj.n.num)
         override fun atom(obj: ChemAtom) {

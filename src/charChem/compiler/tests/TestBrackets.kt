@@ -11,6 +11,7 @@ import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula
 import charChem.lang.Lang
 import charChem.math.Point
+import charChem.math.roundMass
 import charChem.textRules.rulesHtml
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
@@ -18,7 +19,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-fun cmd2str(cmd: ChemObj): String {
+private fun cmd2str(cmd: ChemObj): String {
     return if (cmd is ChemNode && cmd.autoMode) "Auto" else makeTextFormula(cmd)
 }
 
@@ -60,7 +61,7 @@ class TestBrackets {
         assertEquals(makeTextFormula(expr), "(NH4)2SO4")
         val m = PeriodicTable.H.mass * 8 + PeriodicTable.N.mass * 2 +
                 PeriodicTable.O.mass * 4 + PeriodicTable.S.mass
-        assertEquals(calcMass(expr), m)
+        assertEquals(roundMass(calcMass(expr)), roundMass(m))
         assertEquals(makeTextFormula(makeBrutto(expr)), "H8N2O4S")
     }
 
@@ -154,7 +155,7 @@ class TestBrackets {
                 )
         )
         assertEquals(agent.nodes.size, 9)
-        assertEquals(agent.nodes.map {it.pt}, listOf(
+        assertEquals(agent.nodes.map { it.pt }, listOf(
                 Point(), Point(1.0, 0.0), Point(1.0, 1.0),
                 Point(0.0, 1.0), Point(-1.0, 0.0), Point(-1.0, 1.0),
                 Point(0.0, 2.0), Point(-1.0, 2.0), Point(1.0, 2.0),
@@ -187,5 +188,36 @@ class TestBrackets {
                 "CH", "CH2", "CH", "C", "CH2", "CH", "CH", "CH2", "CH2",
         ))
         assertEquals(makeTextFormula(expr), "-[]n|`-`|`-[]n|-|`-[]n`|-[]n`|")
+    }
+
+    // Cases from http://charchem.org/ru/new-features
+
+    @Test
+    fun testAcetone() {
+        val expr = compile("\$ver(1.0)H3C(C=O)CH3")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(expr), "H3C(C=O)CH3")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C3H6O")
+        assertEquals(calcMass(expr), roundMass(PeriodicTable.C.mass * 3 +
+                PeriodicTable.H.mass * 6 + PeriodicTable.O.mass))
+    }
+    @Test
+    fun testPolyChloride() {
+        //     ┌       ┐
+        //     |/\\    |/\
+        //    /|   \\/ |   \
+        //  Cl |    |  |    Cl
+        //     |    Cl |
+        //     └       ┘10
+        val expr = compile("\$ver(1.0)Cl/[\\\\<|Cl>]10/\\Cl")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C21H12Cl12")
+        assertEquals(expr.getAgents()[0].commands.map { cmd2str(it) }, listOf(
+                "Cl", "/", "[", "Auto", "\\\\", "Auto", "|", "Cl", "]10", "/", "Auto", "\\", "Cl"
+        ))
+        assertEquals(roundMass(calcMass(expr)), roundMass(PeriodicTable.Cl.mass * 2 +
+                PeriodicTable.C.mass + PeriodicTable.H.mass * 2 +
+                10 * (PeriodicTable.C.mass * 2 + PeriodicTable.H.mass + PeriodicTable.Cl.mass)
+        ))
     }
 }

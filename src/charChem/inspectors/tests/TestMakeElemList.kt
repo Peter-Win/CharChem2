@@ -34,4 +34,11 @@ class TestMakeElemList() {
         val elList = makeElemList(expr)
         assertEquals(elList.toString(), "Fe2C12N12^6-")
     }
+    @Test
+    fun testMultiplier() {
+        val expr = compile("MgCl2*12H2O")
+        assertEquals(expr.getMessage(), "")
+        val elList = makeElemList(expr)
+        assertEquals(elList.toString(), "MgCl2H24O12")
+    }
 }

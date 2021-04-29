@@ -3,8 +3,10 @@ package charChem.compiler.main
 import charChem.compiler.ChemCompiler
 import charChem.compiler.parse.scanPostItem
 import charChem.compiler.state.stateAgentMid
+import charChem.compiler.state.stateBracketBegin
 import charChem.core.ChemBracketBegin
 import charChem.core.ChemBracketEnd
+import charChem.core.ChemMulEnd
 import charChem.core.ChemNode
 import charChem.inspectors.makeTextFormula
 
@@ -41,16 +43,17 @@ fun openParentheses(compiler: ChemCompiler): Int {
         return openBranch(compiler)
     }
     openBracket(compiler, "(", compiler.pos - 1)
-    return compiler.setState(::stateAgentMid)
+    return compiler.setState(::stateBracketBegin)
 }
 
 fun openSquareBracket(compiler: ChemCompiler): Int {
     openBracket(compiler, "[", compiler.pos++)
-    return compiler.setState(::stateAgentMid)
+    return compiler.setState(::stateBracketBegin)
 }
 
 fun openBracket(compiler: ChemCompiler, text: String, pos: Int) {
     val begin = ChemBracketBegin(text)
+    compiler.mulCounter.onOpenBracket()
     compiler.curAgent!!.commands.add(begin)
     compiler.push(BracketDecl(pos, begin))
     if (compiler.curBond != null) {
@@ -67,7 +70,11 @@ fun getNodeForBracketEnd(compiler: ChemCompiler): ChemNode {
     if (curNode != null) {
         return curNode
     }
-    val lastCmd = compiler.curAgent!!.commands.lastOrNull()
+    val commands = compiler.curAgent!!.commands
+    var lastCmd = commands.lastOrNull()
+    if (lastCmd is ChemMulEnd) {
+        lastCmd = commands[commands.size-2]
+    }
     if (lastCmd is ChemBracketEnd) {
         return lastCmd.nodeIn
     }
@@ -90,6 +97,8 @@ fun closeBracket(compiler: ChemCompiler, text: String, pos: Int): ChemBracketEnd
                 ))
             }
 
+            checkMulBeforeBracket(compiler)
+            compiler.mulCounter.onCloseBracket()
             val bracketEnd = ChemBracketEnd(text, decl.begin, getNodeForBracketEnd(compiler))
             val commands = compiler.curAgent!!.commands
             commands.add(bracketEnd)

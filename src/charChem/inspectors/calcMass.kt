@@ -1,6 +1,7 @@
 package charChem.inspectors
 
 import charChem.core.*
+import charChem.math.roundMass
 
 /**
  * Вычисление массы указанного химического объекта.

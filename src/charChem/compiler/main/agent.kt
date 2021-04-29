@@ -1,11 +1,9 @@
 package charChem.compiler.main
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.state.*
-import charChem.core.ChemAgent
-import charChem.core.ChemBond
-import charChem.core.ChemNode
-import charChem.core.Visitor
+import charChem.compiler.parse.scanCoeff
+import charChem.compiler.state.stateAgentMid
+import charChem.core.*
 
 fun createAgent(compiler: ChemCompiler): ChemAgent {
     val preComm = compiler.preComm
@@ -34,6 +32,7 @@ fun closeChain(compiler: ChemCompiler) {
 
 fun onCloseAgent(compiler: ChemCompiler) {
     compiler.curAgent?.let {
+        checkMul(compiler)
         closeChain(compiler)
         compiler.curAgent = null
         compiler.getAltFlag()
@@ -44,61 +43,14 @@ fun onCloseAgent(compiler: ChemCompiler) {
     }
 }
 
-fun agentAnalyse(compiler: ChemCompiler, onDefault: () -> Int): Int {
-    val c = compiler.curChar()
-    val bond = scanSimpleBond(compiler)
-    if (bond != null) {
-        createSimpleBond(compiler, bond)
-        return compiler.setState(::stateAgentMid)
-    }
-    return when (c) {
-        in 'A'..'Z' -> {
-            // Извлечь первый заглавный символ элемента. Следующие должны быть маленькими
-            compiler.elementStartPos = compiler.pos
-            compiler.setState(::stateElement, 1)
-        }
-        '`' -> {
-            compiler.setAltFlag()
-            compiler.setState(::stateAgentMid, 1)
-        }
-        '{' ->
-            compiler.setState(::stateCustom, 1)
-        '"' ->
-            compiler.setState(::stateCommentIn, 1)
-        ';' -> {
-            closeChain(compiler)
-            compiler.setState(::stateAgentSpace, 1)
-        }
-        ':' ->
-            createLabel(compiler)
-        '#' ->
-            compiler.setState(::stateNodeRef, 1)
-        '^' ->
-            compiler.setState(::stateCharge, 1)
-        '$' ->
-            compiler.setState(::stateFuncName, 1)
-        '<' ->
-            openBranch(compiler)
-        '>' ->
-            closeBranch(compiler)
-        '(' ->
-            openParentheses(compiler)
-        '[' ->
-            openSquareBracket(compiler)
-        ')', ']' ->
-            closeBracketShort(compiler)
-        '*' ->
-            star(compiler)
-        else -> onDefault()
-    }
-}
-
 fun star(compiler: ChemCompiler): Int {
     compiler.pos++
     if (compiler.curChar() == ')') {
         return closeBranch(compiler)
     }
-    compiler.error("Not implemented", listOf())
+    checkMul(compiler)
+    startMul(compiler, scanCoeff(compiler) ?: ChemK(1), false)
+    return compiler.setState(::stateAgentMid)
 }
 
 fun finalUpdateBondsForNodes(agent: ChemAgent) {

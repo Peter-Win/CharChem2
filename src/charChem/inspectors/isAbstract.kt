@@ -30,6 +30,10 @@ class IsAbstractVisitor() : Visitor() {
         isStop = isAbsK(obj.n)
     }
 
+    override fun mul(obj: ChemMul) {
+        isStop = isAbsK(obj.n)
+    }
+
     override fun custom(obj: ChemCustom) {
         isStop = true
     }

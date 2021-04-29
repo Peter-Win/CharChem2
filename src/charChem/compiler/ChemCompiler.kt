@@ -2,6 +2,7 @@ package charChem.compiler
 
 import charChem.compiler.chain.ChainSys
 import charChem.compiler.main.BracketDecl
+import charChem.compiler.main.MulCounter
 import charChem.compiler.main.StackItem
 import charChem.compiler.parse.prepareText
 import charChem.compiler.state.stateBegin
@@ -26,6 +27,7 @@ class ChemCompiler(val srcText: String) {
     var preComm: ChemComment? = null
     val chainSys = ChainSys(this)
     val references = mutableMapOf<String, ChemNode>()
+    var mulCounter: MulCounter = MulCounter()
 
     private val stack = mutableListOf<StackItem>()
     fun push(item: StackItem) = stack.add(0, item)

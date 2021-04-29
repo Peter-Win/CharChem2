@@ -138,6 +138,9 @@ class ChainSys(val compiler: ChemCompiler) {
         curChainId = 0
         curSubChainId = 0
     }
+    fun closeSubChain() {
+        curSubChainId = 0
+    }
 
     fun findNode(pt: Point): ChemNode? {
         return getCurSubChain().find { it.pt == pt }
