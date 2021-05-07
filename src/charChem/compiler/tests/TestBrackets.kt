@@ -1,10 +1,7 @@
 package charChem.compiler.tests
 
 import charChem.compiler.compile
-import charChem.core.ChemBracketEnd
-import charChem.core.ChemNode
-import charChem.core.ChemObj
-import charChem.core.PeriodicTable
+import charChem.core.*
 import charChem.inspectors.calcMass
 import charChem.inspectors.isAbstract
 import charChem.inspectors.makeBrutto
@@ -20,7 +17,9 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 private fun cmd2str(cmd: ChemObj): String {
-    return if (cmd is ChemNode && cmd.autoMode) "Auto" else makeTextFormula(cmd)
+    if (cmd is ChemNode && cmd.autoMode) return "Auto"
+    if (cmd is ChemBond && cmd.isNeg) return "`${makeTextFormula(cmd)}"
+    return makeTextFormula(cmd)
 }
 
 class TestBrackets {
@@ -110,7 +109,7 @@ class TestBrackets {
         assertEquals(expr.getMessage(), "")
         val agent = expr.getAgents()[0]
         // 0:[, 1:Cu, 2:|, 3:Br, 4:`|, 5:Br, 6:], 7:-, 8:H
-        assertEquals(agent.commands.map { makeTextFormula(it) },
+        assertEquals(agent.commands.map { cmd2str(it) },
                 listOf("[", "Cu", "|", "Br", "`|", "Br", "]", "-", "H"))
         val bracketEnd = agent.commands[6]
         assertTrue(bracketEnd is ChemBracketEnd)
@@ -187,7 +186,6 @@ class TestBrackets {
         assertEquals(nodes.map { makeTextFormula(makeBrutto(it)) }, listOf(
                 "CH", "CH2", "CH", "C", "CH2", "CH", "CH", "CH2", "CH2",
         ))
-        assertEquals(makeTextFormula(expr), "-[]n|`-`|`-[]n|-|`-[]n`|-[]n`|")
     }
 
     // Cases from http://charchem.org/ru/new-features

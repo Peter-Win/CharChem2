@@ -23,7 +23,7 @@ package charChem.core
 // Кроме того, является мостиком, т.е. образует новую подцепь
 // example: CuSO4*5H2O
 // isFirst для коэффициента, который стоит первым внутри скобок (2FeO*3H2O)
-class ChemMul(val n: ChemK, val isFirst: Boolean) : ChemObj() {
+class ChemMul(val n: ChemK, val isFirst: Boolean, val color: String?) : ChemObj() {
     override fun walk(visitor: Visitor) {
         visitor.mul(this)
     }

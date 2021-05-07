@@ -11,6 +11,8 @@ fun addNodeItem(compiler: ChemCompiler, subObj: ChemSubObj): ChemNodeItem {
         item.mass = compiler.varMass
         compiler.varMass = 0.0
     }
+    item.color = getItemColor(compiler)
+    item.atomColor = getAtomColor(compiler)
     item.atomNum = compiler.varAtomNumber
     compiler.varAtomNumber = null
     getNodeForced(compiler, false).items.add(item)

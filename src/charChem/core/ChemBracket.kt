@@ -8,8 +8,8 @@ val bracketEnds: List<String> = bracketPairs.map { it.value }
 class ChemBracketBegin(val text: String) : ChemObj() {
     var end: ChemBracketEnd? = null
     var isText: Boolean? = null
-    // this.nodes = [null, null]
     var bond: ChemBond? = null
+    var color: String? = null
     override fun walk(visitor: Visitor) {
         visitor.bracketBegin(this)
     }

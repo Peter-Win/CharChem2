@@ -6,6 +6,10 @@ import charChem.core.ChemK
 import charChem.core.ChemOp
 import charChem.math.strMass
 
+fun htmlEscape(text: String): String = text.replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+
 /**
  * Правила для формирования HTML-представления формулы
  * Важно учесть, что полученная разметка предполагает использование определенных правил CSS
@@ -30,15 +34,20 @@ object rulesHtml: RulesBase() {
     override fun nodeCharge(charge: ChemCharge): String = "<sup>${charge.text}</sup>"
     override fun operation(op: ChemOp): String {
         var result = """<span class="echem-op">"""
-        fun opComm(comm: ChemComment?) =
-                comm?.let { result += """<span class="echem-opcomment">${it.text}</span>""" }
-        opComm(op.commentPre)
+        result += opComment(op.commentPre)
         result += when (op.srcText) {
             "-->" -> """<span class="chem-long-arrow">→</span>"""
             "<==>" -> "<span class=\"chem-long-arrow\">\u21CC</span>"
             else -> op.dstText
         }
-        opComm(op.commentPost)
+        result += opComment(op.commentPost)
         return "$result</span>"
     }
+
+    override fun opComment(comm: ChemComment?): String =
+            comm?.let { """<span class="echem-opcomment">${it.text}</span>""" } ?: ""
+
+    override fun colorBegin(color: String): String =
+            """<span style="color:${htmlEscape(color)}">"""
+    override fun colorEnd(): String = "</span>"
 }

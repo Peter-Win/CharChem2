@@ -6,7 +6,7 @@ import charChem.core.ChemMul
 import charChem.core.ChemMulEnd
 
 fun startMul(compiler: ChemCompiler, k: ChemK, isFirst: Boolean) {
-    val mul = ChemMul(k, isFirst)
+    val mul = ChemMul(k, isFirst, compiler.varColor)
     closeNode(compiler)
     compiler.chainSys.closeSubChain()
     compiler.curAgent!!.commands.add(mul)

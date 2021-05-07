@@ -30,6 +30,7 @@ fun createChemOp(compiler: ChemCompiler, def: OpDef) {
     val preComm = compiler.preComm
     closeEntity(compiler)
     val op = ChemOp(def.src, def.opCode(), def.div)
+    op.color = compiler.varColor
     op.commentPre = preComm
     onCreateEntity(compiler, op)
     compiler.curOp = op

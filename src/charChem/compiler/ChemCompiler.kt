@@ -47,6 +47,11 @@ class ChemCompiler(val srcText: String) {
     var varLength: Double = 0.0
     var varMass: Double = 0.0 // special mass for next element - $M()
     var varAtomNumber: Int? = null // number in $nM(mass, number)
+    var varColor: String? = null
+    var varItemColor: String? = null
+    var varItemColor1: String? = null
+    var varAtomColor: String? = null
+    var varAtomColor1: String? = null
 
     fun curChar(): Char = text[pos]
     fun subStr(startPos: Int): String = text.substring(startPos, pos)

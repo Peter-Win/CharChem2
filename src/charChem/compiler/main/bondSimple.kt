@@ -27,6 +27,7 @@ class BondDef(val n: Int, val angle: Int, val slope: Int, val soft: Boolean = fa
         bond.dir = calcDir(compiler, bond)
         bond.slope = slope
         bond.isAuto = true
+        bond.isText = angle == 0 && slope == 0
         autoCorrection(compiler, bond, slope)
         return bond
     }

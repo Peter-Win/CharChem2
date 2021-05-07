@@ -14,7 +14,7 @@ class ChemBond() : ChemObj() {
     var tx: String = "" // text description
     var slope: Int = 0 // для связи, созданной из описания / = -1, для \ = 1, для остальных =0
     var isText: Boolean = false
-    var color: String = "" // цвет связи
+    var color: String? = null // цвет связи
     var w0: Int = 0 // Толщина начала линии, 0 для обычной толщины, 1 для жирной
     var w1: Int = 0 // толщина конца линии
     var isAuto: Boolean = false // Признак связи, пригодной для автокоррекции

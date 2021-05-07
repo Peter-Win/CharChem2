@@ -28,17 +28,20 @@
 + Use subchains with soft nodes: O|S-Ca`|Mg`-#1   - TestChains.testMergeSubChainsWithSoftBond
 
 + Branch - TestBranch
-- (* *) Branch - TestBranch
++ (* *) Branch - TestBranch
 + Auto correction of simple bonds - TestAutoCorrection
-- Brackets - TestBrackets
++ Brackets - TestBrackets
 
 + 2H2 - agent coeff
 - 2Fe2O3*3H2O - multiplier coeff
 - 2(2Fe2O3*3H2O) - agent coeff and multipliers
++ Comma - (Ca,Mg)SO4 - TestComma
 
 + Functions
 + $M, $nM - TestFunctions
 + $slope, $L - TestFunctions
++ ver
++ color, itemColor, itemColor1, atomColor, atomColor1 - TestColor
 
 - polygonal bonds
 - universal bonds

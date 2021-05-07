@@ -24,6 +24,8 @@ class ChemNode(var pt: Point = Point()) : ChemObj(), ChemChargeOwner {
     var autoMode: Boolean = false
     var bonds: MutableSet<ChemBond> = mutableSetOf()
     var fixed: Boolean = false
+    var color: String? = null
+    var atomColor: String? = null
 
     override fun walk(visitor: Visitor) {
         visitor.nodePre(this)

@@ -53,6 +53,7 @@ fun openSquareBracket(compiler: ChemCompiler): Int {
 
 fun openBracket(compiler: ChemCompiler, text: String, pos: Int) {
     val begin = ChemBracketBegin(text)
+    begin.color = compiler.varColor
     compiler.mulCounter.onOpenBracket()
     compiler.curAgent!!.commands.add(begin)
     compiler.push(BracketDecl(pos, begin))

@@ -24,7 +24,7 @@ class ChemRadical(val label: String, val items: ElemList) : ChemSubObj() {
                 "Bu,nBu,n-Bu,Bu-n:C*4,H*9",
                 "i-Bu,Bu-i:C*4,H*9",
                 "Ac:C,H*3,C,O",
-                "Tf:C,F*3,S,O*2", // TfOH = CF3SO3H, Tf = CF3SO2
+                "Tf:C,F*3,S,O*2", // TfOH = CF3SO3H, Tf = CF3SO2 https://en.wikipedia.org/wiki/Trifluoromethylsulfonyl
         // MsOH https://en.wikipedia.org/wiki/Methanesulfonic_acid
         )
     }
