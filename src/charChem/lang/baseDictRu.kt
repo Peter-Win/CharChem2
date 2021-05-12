@@ -31,6 +31,8 @@ val baseDictRu: Map<String, String> = mapOf(
             "Ошибка в описании заряда в позиции [pos]",
     "It is necessary to close the bracket" to
             "Необходимо закрыть скобку, открытую в позиции [pos]",
+    "Expected variable name" to
+            "Требуется указать имя переменной в позиции [pos]",
     "Undefined variable [name]" to
             "Не определена числовая переменная '[name]' в позиции [pos]",
     "Invalid node reference '[ref]'" to
@@ -54,7 +56,7 @@ val baseDictRu: Map<String, String> = mapOf(
     "Cant create ring" to "Невозможно создать кольцо",
     "Cant close ring" to "Невозможно замкнуть кольцо",
     "Invalid version" to "Для формулы требуется CharChem версии [need] вместо [cur]",
-        "Invalid number [n]" to "Неверное числовое значение [n] в позиции [pos]",
+    "Invalid number [n]" to "Неверное числовое значение [n] в позиции [pos]",
 
     "(s)" to "(тв)", "(l)" to "(ж)", "(g)" to "(г)", "(aq)" to "(р-р)",
     "H" to "Водород", "He" to "Гелий", "Li" to "Литий", "Be" to "Бериллий", "B" to "Бор", "C" to "Углерод",

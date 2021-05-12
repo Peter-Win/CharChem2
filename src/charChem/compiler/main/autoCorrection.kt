@@ -3,6 +3,7 @@ package charChem.compiler.main
 import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
 import charChem.math.Point
+import charChem.math.is0
 import charChem.math.pointFromRad
 import kotlin.math.abs
 
@@ -19,19 +20,25 @@ fun correct(bond: ChemBond, length: Double?) {
     bond.isCorr = true
 }
 
+fun getLastBond(compiler: ChemCompiler): ChemBond? {
+    // compiler.curBond
+    return compiler.chainSys.getLastBond()
+}
+
 fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
     if (compiler.varSlope != 0.0) {
         // Если указан угол наклона при помощи $slope(x)
         return
     }
     // Если нет предыдущей связи, то коррекция невозможна
-    val prevBond = compiler.curBond ?: return
+    val prevBond = getLastBond(compiler) ?: return
     if (!prevBond.isAuto) {
         // Коррекция возможно только если предыдущая связь создана из простого описания
         return
     }
 
-    if (prevBond.slope == 0 && slopeSign != 0) {
+//    if (prevBond.slope == 0 && slopeSign != 0) {
+    if (prevBond.isAuto && is0(prevBond.dir!!.y) && slopeSign != 0) {
         // Стыковка горизонтальной связи с наклонной
         correct(bond, compiler.varLength)
         return

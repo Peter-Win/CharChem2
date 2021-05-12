@@ -17,8 +17,20 @@ class ChainSys(val compiler: ChemCompiler) {
 
     private var curChainId = 0
     private var curSubChainId = 0
+    private var lastBond: ChemBond? = null
+    private val stack: MutableList<ChemBond?> = mutableListOf()
+
+    fun getLastBond(): ChemBond? = lastBond
+
+    fun onBranchBegin() {
+        stack.add(0, lastBond)
+    }
+    fun onBranchEnd() {
+        lastBond = stack.removeAt(0)
+    }
 
     private fun createChain(): Int {
+        lastBond = null
         val newChainId = generateChainId()
         chainsDict[newChainId] = mutableSetOf()
         return newChainId
@@ -32,6 +44,7 @@ class ChainSys(val compiler: ChemCompiler) {
     }
 
     private fun createSubChain(): Int {
+        lastBond = null
         val newId = generateSubChainId()
         curSubChainId = newId
         subChainsDict[newId] = mutableListOf()
@@ -63,6 +76,7 @@ class ChainSys(val compiler: ChemCompiler) {
         if (bond.soft) {
             createSubChain()
         }
+        lastBond = bond
     }
 
     private fun mergeSubChains(dstId: Int, srcId: Int, step: Point) {
@@ -137,9 +151,11 @@ class ChainSys(val compiler: ChemCompiler) {
     fun closeChain() {
         curChainId = 0
         curSubChainId = 0
+        lastBond = null
     }
     fun closeSubChain() {
         curSubChainId = 0
+        lastBond = null
     }
 
     fun findNode(pt: Point): ChemNode? {

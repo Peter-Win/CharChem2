@@ -55,7 +55,7 @@ fun getNodeForBondStart(compiler: ChemCompiler, bond: ChemBond): ChemNode {
     return openNode(compiler, true)
 }
 
-// Предполагается, что свойства bond уже заполнены. В первую очередь: dir, n
+// Предполагается, что свойства bond уже заполнены. В первую очередь: dir, n, soft
 fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
     val oldNode = getNodeForBondStart(compiler, bond)
     closeNode(compiler)

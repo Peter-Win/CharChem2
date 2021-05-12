@@ -13,6 +13,12 @@ fun getAngle(agent: ChemAgent, i: Int = 1): Int? = agent.bonds[i].dir?.polarAngl
 
 class TestAutoCorrection {
     @Test
+    fun testNotAutoNode() {
+        val expr = compile("H3C--O\\CH3")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(getAngle(expr.getAgents()[0]), 60)
+    }
+    @Test
     fun testHorizontalAndSlopeExternal() {
         //  __/ __  \__  __
         //        \     /

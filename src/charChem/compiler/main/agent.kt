@@ -17,6 +17,7 @@ fun createAgent(compiler: ChemCompiler): ChemAgent {
     }
     compiler.references.clear()
     compiler.varMass = 0.0
+    compiler.curWidth = 0
     return agent
 }
 

@@ -51,6 +51,8 @@ fun agentAnalyse(compiler: ChemCompiler, onDefault: () -> Int): Int {
             star(compiler)
         ',' ->
             comma(compiler)
+        '_' ->
+            compiler.setState(::stateUniBond, 1)
         else -> onDefault()
     }
 }

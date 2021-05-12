@@ -1,6 +1,7 @@
 package charChem.compiler.main
 
 import charChem.compiler.ChemCompiler
+import charChem.compiler.parse.scanBondSuffix
 import charChem.core.ChemBond
 import charChem.math.Point
 import charChem.math.pointFromDeg
@@ -85,5 +86,6 @@ fun scanSimpleBond(compiler: ChemCompiler): ChemBond? {
 }
 
 fun createSimpleBond(compiler: ChemCompiler, bond: ChemBond) {
+    scanBondSuffix(compiler, bond)
     onOpenBond(compiler, bond)
 }

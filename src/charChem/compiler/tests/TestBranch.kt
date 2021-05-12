@@ -27,6 +27,19 @@ class TestBranch {
         assertEquals(d.pt, Point(2.0, 0.0))
     }
     @Test
+    fun testNotAutoNode() {
+        val expr = compile("H3C--N<|CH3>--CH3")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C3H9N")
+        val nodes = expr.getAgents()[0].nodes
+        assertEquals(nodes.size, 4)
+        val (a, b, c, d) = nodes
+        assertEquals(a.pt, Point())
+        assertEquals(b.pt, Point(1.0, 0.0))
+        assertEquals(c.pt, Point(1.0, 1.0))
+        assertEquals(d.pt, Point(2.0, 0.0))
+    }
+    @Test
     fun testNested() {
         // N,N-Dimethylisopropylamine
         // ---N---

@@ -17,6 +17,7 @@ fun openBranch(compiler: ChemCompiler): Int {
     compiler.curNode?.let { node ->
         compiler.push(BranchDecl(compiler.pos, node, compiler.curBond))
     }
+    compiler.chainSys.onBranchBegin()
     return compiler.setState(::stateAgentMid, 1)
 }
 
@@ -32,6 +33,7 @@ fun closeBranch(compiler: ChemCompiler): Int {
         closeNode(compiler)
 
         compiler.curNode = decl.node
+        compiler.chainSys.onBranchEnd()
         compiler.chainSys.setCurNode(decl.node)
 
         return compiler.setState(::stateAgentMid, 1)
