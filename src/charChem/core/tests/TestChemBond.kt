@@ -23,7 +23,7 @@ class TestChemBond {
         val nodeB = ChemNode(Point(1.0, 1.0))
         val nodeC = ChemNode(Point(2.0, 2.0))
         val bond = ChemBond()
-        bond.nodes = arrayOf(nodeA, nodeB)
+        bond.nodes = mutableListOf(nodeA, nodeB)
         assertEquals(bond.other(nodeA), nodeB)
         assertEquals(bond.other(nodeB), nodeA)
         assertNull(bond.other(nodeC))

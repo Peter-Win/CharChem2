@@ -43,8 +43,8 @@
 + ver
 + color, itemColor, itemColor1, atomColor, atomColor1 - TestColor
 
-- polygonal bonds _p, _q
-- round bonds _o
++ polygonal bonds _p, _q - TestPolygonalBond
++ round bonds _o  - TestRingBond
 - spline bond _s
 - middle points _m
 + universal bonds _()

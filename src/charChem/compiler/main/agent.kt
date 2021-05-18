@@ -18,12 +18,13 @@ fun createAgent(compiler: ChemCompiler): ChemAgent {
     compiler.references.clear()
     compiler.varMass = 0.0
     compiler.curWidth = 0
+    compiler.nodesBranch.onSubChain()
     return agent
 }
 
 fun closeChain(compiler: ChemCompiler) {
     compiler.curBond?.let {
-        if (it.nodes[1] == null) {
+        if (it.nodes.size == 2 && it.nodes[1] == null) {
             openNode(compiler, true)
         }
     }

@@ -37,7 +37,6 @@ fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
         return
     }
 
-//    if (prevBond.slope == 0 && slopeSign != 0) {
     if (prevBond.isAuto && is0(prevBond.dir!!.y) && slopeSign != 0) {
         // Стыковка горизонтальной связи с наклонной
         correct(bond, compiler.varLength)
@@ -56,7 +55,7 @@ fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
         return
     }
     // Стыковка с горизонтальной связью
-    if (prevBond.slope != 0 && !prevBond.isCorr && slopeSign == 0) {
+    if (prevBond.slope != 0 && !prevBond.isCorr && bond.isHorizontal()) {
         correct(prevBond, null)
     }
 }

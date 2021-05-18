@@ -21,6 +21,8 @@ fun openNode(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
     compiler.curNode = node
     compiler.chargeOwner = node
     compiler.chainSys.addNode(node)
+    compiler.nodesBranch.onNode(node)
+
     bindNodeToCurrentBond(compiler, node)
     return node
 }

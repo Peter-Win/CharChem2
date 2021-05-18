@@ -4,6 +4,7 @@ import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
 import charChem.core.ChemBracketEnd
 import charChem.core.ChemNode
+import kotlin.math.roundToInt
 
 fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     compiler.curNode = node
@@ -16,6 +17,8 @@ fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
         chemBond.soft = false
         compiler.chainSys.changeBondToHard(chemBond)
     }
+    if (chemBond.soft)
+        compiler.nodesBranch.onSubChain()
     compiler.curBond = null
     // Для жесткой связи можно вычислить координаты второго узла относительно первого
     val dir = chemBond.dir
@@ -68,14 +71,14 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
     val dir = bond.dir
     if (dir != null && !dir.isZero() && !(bond.soft && !oldNode.autoMode)) {
         val pt = bond.calcPt()
-        val newNode = compiler.chainSys.findNode(pt)
-        newNode?.let {
-            if (!bond.soft || newNode.autoMode) {
-                findBondBetweenNodes(compiler, oldNode, newNode)?.let { oldBond ->
-                    mergeBonds(compiler, oldBond, bond, newNode)
+        compiler.chainSys.findNode(pt)?.let { existsNode ->
+            compiler.nodesBranch.onNode(existsNode)
+            if (!bond.soft || existsNode.autoMode) {
+                findBondBetweenNodes(compiler, oldNode, existsNode)?.let { oldBond ->
+                    mergeBonds(compiler, oldBond, bond, existsNode)
                     return
                 }
-                bindNodeToBond(compiler, newNode, bond)
+                bindNodeToBond(compiler, existsNode, bond)
             }
         }
     }
@@ -90,4 +93,6 @@ fun mergeBonds(compiler: ChemCompiler, oldBond: ChemBond, newBond: ChemBond, new
     oldBond.n += newBond.n
     compiler.curNode = newNode
     compiler.curBond = oldBond
+    // TODO: Возможно, здесь стоило бы пометить newBond, что его нельзя корректировать
+    compiler.chainSys.addBond(newBond)
 }

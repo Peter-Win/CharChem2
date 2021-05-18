@@ -1,10 +1,7 @@
 package charChem.compiler
 
 import charChem.compiler.chain.ChainSys
-import charChem.compiler.main.BracketDecl
-import charChem.compiler.main.MulCounter
-import charChem.compiler.main.StackItem
-import charChem.compiler.main.closeEntity
+import charChem.compiler.main.*
 import charChem.compiler.parse.prepareText
 import charChem.compiler.state.stateBegin
 import charChem.core.*
@@ -31,6 +28,7 @@ class ChemCompiler(val srcText: String) {
     var mulCounter: MulCounter = MulCounter()
     val varsDict = mutableMapOf<String, Double>()
     var curWidth = 0
+    val nodesBranch = NodesBranch()
 
     private val stack = mutableListOf<StackItem>()
     fun push(item: StackItem) = stack.add(0, item)

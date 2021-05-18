@@ -6,7 +6,7 @@ import kotlin.math.abs
 
 class ChemBond() : ChemObj() {
     var n: Double = 1.0 // multiplicity of the bond
-    var nodes: Array<ChemNode?> = arrayOf(null, null)
+    var nodes = mutableListOf<ChemNode?>(null, null)
     var index: Int? = null // index of bond in ChemAgent.bonds array
     // TODO: может быть нарушена в closeAgent при удалении дублирующих связей !!!
 
@@ -57,4 +57,15 @@ class ChemBond() : ChemObj() {
         // Связь считается текстовой, если она расположена горизонтально и имеет длину =1
         isText = dir?.let { is0(abs(it.x) -1.0) && is0(it.y) } ?: false
     }
+
+    fun linearText(): String = if (isAuto) {
+        var res = tx
+        if (isNeg) res = "`$res"
+        if (is0(n)) res += '0'
+        res
+    } else {
+        tx
+    }
+
+    fun isHorizontal(): Boolean = dir?.let { !is0(it.x) && is0(it.y) } ?: false
 }
