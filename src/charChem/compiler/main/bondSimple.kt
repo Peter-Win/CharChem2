@@ -21,7 +21,7 @@ fun makeBondStep(angleDegree: Double, length: Double) =
 // 0=(кратность), 1=(угол в градусах), 2=(знак наклона), 3=(признак мягкой связи), 4=(текст)
 class BondDef(val n: Int, val angle: Int, val slope: Int, val soft: Boolean = false, val text: String? = null) {
     fun create(compiler: ChemCompiler, bondId: String): ChemBond {
-        val bond = ChemBond()
+        val bond = createCommonBond(compiler)
         bond.tx = text ?: bondId
         bond.n = n.toDouble()
         bond.soft = soft

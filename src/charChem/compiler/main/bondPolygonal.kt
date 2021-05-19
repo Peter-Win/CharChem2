@@ -28,7 +28,7 @@ fun createPolygonalBond(compiler: ChemCompiler) {
     }
     val count = sign * (strCount.toIntOrNull() ?: 0)
 
-    val bond = ChemBond()
+    val bond = createCommonBond(compiler)
     bond.n = multiplicity.toDouble()
     bond.dir = createPolygonStep(compiler, if (count == 0) 5 else count, compiler.varLength)
 

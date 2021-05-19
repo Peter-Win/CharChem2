@@ -28,6 +28,7 @@ class ChemBond() : ChemObj() {
     var brk: Boolean = false // Устанавливается для конструкции типа -#a-#b-#c-, для связи, предшествующей существующему узлу
     var isNeg: Boolean = false // Использовался символ `
     var isCorr: Boolean = false // Выполнена коррекция наклона с 30 до 60 градусов
+    var isCycle: Boolean = false // Циклическая связь. Всегда true для _o и может быть для _s
 
     // Position calculate for second part of bond
     fun calcPt(): Point = nodes[0]!!.pt + dir!!

@@ -60,8 +60,8 @@ fun parseRefsList(compiler: ChemCompiler, value: String, pos: Int): Point {
 fun parseAxisCoordinate(compiler: ChemCompiler, isX: Boolean, value: String, pos: Int): Double {
     return if (!value.startsWith('#')) parseNum(compiler, value, pos)
     else {
-        val pos = parseRefsList(compiler, value.substring(1), pos + 1)
-        if (isX) pos.x else pos.y
+        val center = parseRefsList(compiler, value.substring(1), pos + 1)
+        if (isX) center.x else center.y
     }
 }
 
@@ -112,7 +112,7 @@ fun parseBondMultiplicity(compiler: ChemCompiler, bond: ChemBond, param: UniBond
     }
 }
 
-fun parseStyle(compiler: ChemCompiler, bond: ChemBond, value: String) {
+fun parseStyle(bond: ChemBond, value: String) {
     if (value.isNotEmpty() && value[value.length-1].toLowerCase() in setOf('m', 'l', 'r')) {
         bond.align = value[value.length-1]
         bond.style = value.substring(0, value.length - 1)
@@ -139,7 +139,7 @@ fun setBondProperties(compiler: ChemCompiler, bond: ChemBond, params: BondParams
     params['<']?.let { bond.arr0 = true }
     params['>']?.let { bond.arr1 = true }
     params['~']?.let { bond.style = "~" }
-    params['S']?.let { parseStyle(compiler, bond, it.value) }
+    params['S']?.let { parseStyle(bond, it.value) }
 
     fun setWidth(id: String, sign: Int, isGlobal: Boolean) {
         val step: Pair<Int?, Int?> = when (id) {
@@ -166,7 +166,7 @@ fun createUniversalBond(compiler: ChemCompiler, args: List<String>, argPos: List
     if (compiler.curNode == null) {
         openNode(compiler, true)
     }
-    val bond = ChemBond()
+    val bond = createCommonBond(compiler)
     val params = makeParamsDict(args, argPos)
     bond.dir = calcBondDirection(compiler, params)
     setBondProperties(compiler, bond, params)

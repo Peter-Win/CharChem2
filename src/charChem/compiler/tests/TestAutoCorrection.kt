@@ -39,6 +39,9 @@ class TestAutoCorrection {
 
     @Test
     fun testHorizontalAndSlopeInternal() {
+        //
+        //   _\ __  /_  __
+        //       /      \
         val expr = compile("-`\\ -`/ `-/ `-\\")
         assertEquals(expr.getMessage(), "")
         val a = expr.getAgents()
@@ -114,6 +117,10 @@ class TestAutoCorrection {
 
     @Test
     fun testPrevSlopeWithHorizontal() {
+        //           o      o              o o
+        //    __  __  \__  /_  __   __  __/  _\
+        //   /    \              \   /
+        //  o      o              o o
         val expr = compile("/- `\\- \\- `/- `\\`- /`- `/`- \\`-")
         assertEquals(expr.getMessage(), "")
         val a = expr.getAgents()
@@ -144,6 +151,24 @@ class TestAutoCorrection {
         assertEquals(a[6].nodes[2].pt, pointFromDeg(120.0) - Point(1.0, 0.0))
         assertEquals(a[7].nodes[1].pt, pointFromDeg(60.0))
         assertEquals(a[7].nodes[2].pt, pointFromDeg(60.0) - Point(1.0, 0.0))
+    }
+
+    @Test
+    fun testNodeCoordinates() {
+        // 0\
+        //  1\_____2
+        //   /
+        // 3/
+        val expr = compile("\\<->`/")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.bonds.map { it.dir!!.polarAngleDeg().roundToInt() }, listOf(60, 0, 120))
+        assertEquals(agent.nodes.map { it.pt }, listOf(
+                Point(),
+                pointFromDeg(60.0),
+                pointFromDeg(60.0) + Point(1.0, 0.0),
+                pointFromDeg(60.0) + pointFromDeg(120.0),
+        ))
     }
 
     @Test

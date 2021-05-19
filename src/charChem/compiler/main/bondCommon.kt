@@ -6,6 +6,12 @@ import charChem.core.ChemBracketEnd
 import charChem.core.ChemNode
 import kotlin.math.roundToInt
 
+fun createCommonBond(compiler: ChemCompiler): ChemBond {
+    val bond = ChemBond()
+    bond.color = compiler.varColor
+    return bond
+}
+
 fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     compiler.curNode = node
 

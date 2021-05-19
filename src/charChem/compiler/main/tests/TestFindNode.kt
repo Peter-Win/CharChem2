@@ -1,27 +1,12 @@
 package charChem.compiler.main.tests
 
-import charChem.compiler.ChemCompiler
-import charChem.compiler.createTestCompiler
-import charChem.compiler.main.closeEntity
-import charChem.compiler.main.closeNode
+import charChem.compiler.createTestCompilerWithSingleAgent
 import charChem.compiler.main.findNode
-import charChem.compiler.state.stateAgentMid
 import charChem.inspectors.makeTextFormula
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-
-fun createTestCompilerWithSingleAgent(text: String): ChemCompiler {
-    val compiler = createTestCompiler(text)
-    while (!compiler.isFinish()) {
-        if (compiler.curChar() == ' ' && compiler.curState == ::stateAgentMid) break
-        val step = compiler.curState(compiler)
-        compiler.pos += step
-    }
-    closeNode(compiler)
-    return compiler
-}
 
 class TestFindNode {
     @Test

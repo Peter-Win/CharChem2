@@ -6,6 +6,7 @@ import charChem.math.Point
 import charChem.math.is0
 import charChem.math.pointFromRad
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 val defaultSlope: Double = Math.PI / 6.0 // 30° - стандартный наклон кратких описаний связей
 val correctedSlope = Math.PI / 3.0
@@ -18,6 +19,7 @@ fun newAngleDeg(bond: ChemBond): Double = horizAngles[(bond.slope + 1) * 2 + if 
 fun correct(bond: ChemBond, length: Double?) {
     bond.dir = makeBondStep(newAngleDeg(bond), length ?: bond.dir!!.length())
     bond.isCorr = true
+    bond.nodes[1]?.let { it.pt = bond.calcPt() }
 }
 
 fun getLastBond(compiler: ChemCompiler): ChemBond? {
