@@ -44,9 +44,9 @@ class TestFunctions {
     fun testVer() {
         assertEquals(compile("\$ver()H2").getMessage(), "")
         assertEquals(compile("\$ver(1)H2").getMessage(), "")
-        assertEquals(compile("\$ver(2)H2").getMessage(),
+        assertEquals(compile("\$ver(2)H2").getMessage("en"),
                 "Formula requires CharChem version 2.0 instead of 1.2")
-        assertEquals(compile("\$ver(1,9)H2").getMessage(),
+        assertEquals(compile("\$ver(1,9)H2").getMessage("en"),
                 "Formula requires CharChem version 1.9 instead of 1.2")
         assertEquals(compile("\$ver(2.3.4)").getMessage("ru"),
         "Для формулы требуется CharChem версии 2.3 вместо 1.2")
