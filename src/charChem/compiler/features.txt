@@ -46,7 +46,7 @@
 + polygonal bonds _p, _q - TestPolygonalBond
 + round bonds _o  - TestRingBond
 + spline bond _s - TestSplineBond
-- middle points _m
++ middle points _m - TestMiddlePoints
 + universal bonds _()
   +p, +P, +a, +A, +L, +x, +y - TestUniversalBond
   + #refsList in x, y: -_(x#1;-1,y1)  - TestUniversalBond.testUsingRefsListInXY

@@ -1,10 +1,7 @@
 package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.main.createPolygonalBond
-import charChem.compiler.main.createRingBond
-import charChem.compiler.main.createSplineBond
-import charChem.compiler.main.createUniversalBond
+import charChem.compiler.main.*
 import charChem.compiler.parse.scanArgs
 
 fun stateUniBond(compiler: ChemCompiler): Int {
@@ -15,7 +12,7 @@ fun stateUniBond(compiler: ChemCompiler): Int {
             createUniversalBond(compiler, args.args, args.argPos)
         }
         'p', 'q' ->  createPolygonalBond(compiler)
-        'm' -> compiler.error("Middle points is not implemented yet", listOf())
+        'm' -> createMiddlePoint(compiler)
         'o' -> createRingBond(compiler, 1)
         's' -> createSplineBond(compiler)
         else -> createUniversalBond(compiler, listOf(), listOf())

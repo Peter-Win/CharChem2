@@ -35,6 +35,7 @@ fun closeChain(compiler: ChemCompiler) {
 fun onCloseAgent(compiler: ChemCompiler) {
     compiler.curAgent?.let {
         checkMul(compiler)
+        checkMiddlePoints(compiler)
         closeChain(compiler)
         compiler.curAgent = null
         compiler.getAltFlag()

@@ -29,6 +29,8 @@ class ChemBond() : ChemObj() {
     var isNeg: Boolean = false // Использовался символ `
     var isCorr: Boolean = false // Выполнена коррекция наклона с 30 до 60 градусов
     var isCycle: Boolean = false // Циклическая связь. Всегда true для _o и может быть для _s
+    var middlePoints: List<Point>? = null // Дополнительные точки для искривленных связей.
+    // Если связь имеет дополнительные точки, то она не будет мержиться с другими связями между этими же узлами
 
     // Position calculate for second part of bond
     fun calcPt(): Point = nodes[0]!!.pt + dir!!

@@ -40,7 +40,7 @@ fun bindNodeToCurrentBond(compiler: ChemCompiler, node: ChemNode) {
 fun findBondBetweenNodes(compiler: ChemCompiler, nodeA: ChemNode, nodeB: ChemNode): ChemBond? {
     return compiler.curAgent!!.bonds.find {
         val nodes = it.nodes
-        nodes.size == 2 && (
+        it.middlePoints == null && nodes.size == 2 && (
             (nodes[0] == nodeA && nodes[1] == nodeB) ||
             (nodes[0] == nodeB && nodes[1] == nodeA)
         )
@@ -68,6 +68,7 @@ fun getNodeForBondStart(compiler: ChemCompiler, bond: ChemBond): ChemNode {
 fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
     val oldNode = getNodeForBondStart(compiler, bond)
     closeNode(compiler)
+    applyMiddlePoints(compiler, bond)
     bond.nodes[0] = oldNode
     bond.color = compiler.varColor
     // Здесь можно сделать предположение о том, что связь входит вкакой-либо из узлов своей подцепи
@@ -80,9 +81,11 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
         compiler.chainSys.findNode(pt)?.let { existsNode ->
             compiler.nodesBranch.onNode(existsNode)
             if (!bond.soft || existsNode.autoMode) {
-                findBondBetweenNodes(compiler, oldNode, existsNode)?.let { oldBond ->
-                    mergeBonds(compiler, oldBond, bond, existsNode)
-                    return
+                if (bond.middlePoints == null) {
+                    findBondBetweenNodes(compiler, oldNode, existsNode)?.let { oldBond ->
+                        mergeBonds(compiler, oldBond, bond, existsNode)
+                        return
+                    }
                 }
                 bindNodeToBond(compiler, existsNode, bond)
             }

@@ -15,6 +15,7 @@ fun closeNode(compiler: ChemCompiler) {
 
 fun openNode(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
     closeNode(compiler)
+    checkMiddlePoints(compiler)
     val node = compiler.curAgent!!.addNode(ChemNode())
     node.index = compiler.curAgent!!.nodes.size - 1
     node.autoMode = isAuto

@@ -6,8 +6,11 @@ import charChem.compiler.parse.prepareText
 import charChem.compiler.state.stateBegin
 import charChem.core.*
 import charChem.lang.LangParams
+import charChem.math.Point
 
 typealias CompilerState = (c: ChemCompiler) -> Int
+
+data class MiddlePoint(val pt: Point, val pos: Int)
 
 class ChemCompiler(val srcText: String) {
     val expr = ChemExpr()
@@ -29,6 +32,7 @@ class ChemCompiler(val srcText: String) {
     val varsDict = mutableMapOf<String, Double>()
     var curWidth = 0
     val nodesBranch = NodesBranch()
+    val middlePoints = mutableListOf<MiddlePoint>()
 
     private val stack = mutableListOf<StackItem>()
     fun push(item: StackItem) = stack.add(0, item)
