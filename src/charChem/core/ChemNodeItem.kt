@@ -10,7 +10,7 @@ class ChemNodeItem(val obj: ChemSubObj, var n: ChemK = ChemK(1)) : ChemObj() {
     var atomNum: Int? = null	// признак вывода атомного номера (для ядерных реакций).
     var color: String? = null	// общий цвет
     var atomColor: String? = null	// цвет атомов
-    //this.bCenter = 0;	// Необяз. признак приоритетности элемента, задаваемый при помощи обратного апострофа: H3C`O|
+    var bCenter: Boolean = false	// признак приоритетности элемента, задаваемый при помощи обратного апострофа: H3C`O|
     //this.dots = [];
     //this.dashes = [];
 

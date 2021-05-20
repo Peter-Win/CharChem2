@@ -15,6 +15,19 @@ fun isEmptyNode(node: ChemNode): Boolean {
     }).isStop
 }
 
+/**
+ * Priority table for different items
+ * 1 = comment
+ * 2 = abstract item
+ * 3 = H element
+ * 4 = radicals and all elements (except C and H)
+ * 5 = C element
+ * 6 = item with bCenter flag
+ */
+enum class ItemPriority {
+    NA, Comment, Abstract, Hydrogen, Default, Carbon, Explicit
+}
+
 class ChemNode(var pt: Point = Point()) : ChemObj(), ChemChargeOwner {
     override var charge: ChemCharge? = null
     val items: MutableList<ChemNodeItem> = mutableListOf()
@@ -35,5 +48,42 @@ class ChemNode(var pt: Point = Point()) : ChemObj(), ChemChargeOwner {
             if (visitor.isStop) return
         }
         visitor.nodePost(this)
+    }
+
+    fun getCenterItem(): ChemNodeItem? {
+        var curPriority = ItemPriority.NA
+        var maxPriority = ItemPriority.NA
+        var foundItem: ChemNodeItem? = null
+        walk(object : Visitor() {
+            override fun itemPre(obj: ChemNodeItem) {
+                curPriority = ItemPriority.NA
+            }
+            override fun comment(obj: ChemComment) {
+                curPriority = ItemPriority.Comment
+            }
+            override fun custom(obj: ChemCustom) {
+                curPriority = ItemPriority.Abstract
+            }
+            override fun radical(obj: ChemRadical) {
+                curPriority = ItemPriority.Default
+            }
+            override fun atom(obj: ChemAtom) {
+                curPriority = when (obj.id) {
+                    "H" -> ItemPriority.Hydrogen
+                    "C" -> ItemPriority.Carbon
+                    else -> ItemPriority.Default
+                }
+            }
+            override fun itemPost(obj: ChemNodeItem) {
+                if (obj.bCenter) {
+                    curPriority = ItemPriority.Explicit
+                }
+                if (curPriority > maxPriority) {
+                    maxPriority = curPriority
+                    foundItem = obj
+                }
+            }
+        })
+        return foundItem
     }
 }

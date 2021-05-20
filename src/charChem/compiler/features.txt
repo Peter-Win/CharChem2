@@ -42,6 +42,11 @@
 + $slope, $L - TestFunctions
 + ver
 + color, itemColor, itemColor1, atomColor, atomColor1 - TestColor
+- C
+- dblAlign
+- dots
+- dashes
+
 
 + polygonal bonds _p, _q - TestPolygonalBond
 + round bonds _o  - TestRingBond
@@ -52,3 +57,5 @@
   + #refsList in x, y: -_(x#1;-1,y1)  - TestUniversalBond.testUsingRefsListInXY
   +%var, +$const - TestParseNum
   +N, +H, +S, +w, +d, +W, +D, +C, +>, +<, +~, +h, +T - TestUniversalBondProps
+
++ center of node (H3`C\OH) - TestCenterOfNode
