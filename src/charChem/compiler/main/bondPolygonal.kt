@@ -5,6 +5,7 @@ import charChem.compiler.parse.scanBondSuffix
 import charChem.core.ChemBond
 
 fun createPolygonalBond(compiler: ChemCompiler) {
+    val beginPos = compiler.pos - 1
     val mode: Char = compiler.curChar()
     var multiplicity = 1
     val sign: Int = when (mode) {
@@ -33,6 +34,7 @@ fun createPolygonalBond(compiler: ChemCompiler) {
     bond.dir = createPolygonStep(compiler, if (count == 0) 5 else count, compiler.varLength)
 
     scanBondSuffix(compiler, bond)
+    bond.tx = compiler.subStr(beginPos)
 
     onOpenBond(compiler, bond)
 }

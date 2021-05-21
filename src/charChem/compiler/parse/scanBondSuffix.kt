@@ -24,6 +24,9 @@ private val bondSuffixes = listOf<SuffixDef>(
         SuffixDef("d"){ bond -> bond.w1 = -1 },
         SuffixDef("x"){ bond -> bond.setCross() },
         SuffixDef("~"){ bond -> bond.style = "~" },
+        SuffixDef("r"){ bond -> bond.align = 'r'},
+        SuffixDef("m"){ bond -> bond.align = 'm'},
+        SuffixDef("l"){ bond -> bond.align = 'l'},
         SuffixDef("vvv"){ bond ->
             bond.arr0 = true
             bond.arr1 = true

@@ -57,6 +57,7 @@ class ChemCompiler(val srcText: String) {
     var varItemColor1: String? = null
     var varAtomColor: String? = null
     var varAtomColor1: String? = null
+    var varAlign: Char? = null
 
     fun curChar(): Char = text[pos]
     fun subStr(startPos: Int): String = text.substring(startPos, pos)

@@ -69,6 +69,9 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
     val oldNode = getNodeForBondStart(compiler, bond)
     closeNode(compiler)
     applyMiddlePoints(compiler, bond)
+    if (bond.n == 2.0 && bond.align == null) {
+        bond.align = compiler.varAlign
+    }
     bond.nodes[0] = oldNode
     bond.color = compiler.varColor
     // Здесь можно сделать предположение о том, что связь входит вкакой-либо из узлов своей подцепи

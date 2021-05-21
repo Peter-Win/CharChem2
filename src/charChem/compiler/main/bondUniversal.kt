@@ -114,7 +114,7 @@ fun parseBondMultiplicity(compiler: ChemCompiler, bond: ChemBond, param: UniBond
 
 fun parseStyle(bond: ChemBond, value: String) {
     if (value.isNotEmpty() && value[value.length-1].toLowerCase() in setOf('m', 'l', 'r')) {
-        bond.align = value[value.length-1]
+        bond.align = value[value.length-1].toLowerCase()
         bond.style = value.substring(0, value.length - 1)
     } else {
         bond.style = value

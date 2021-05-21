@@ -45,4 +45,10 @@ class TestScanOp {
         assertEquals(compiler.pos, 2)
         assertTrue(res.div)
     }
+    @Test
+    fun testDifferenceBetweenOpAndBond() {
+        val compiler = createTestCompiler("=|=") // = is not op
+        val res = scanOp(compiler)
+        assertNull(res)
+    }
 }
