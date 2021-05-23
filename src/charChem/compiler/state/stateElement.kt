@@ -2,9 +2,7 @@ package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
 import charChem.compiler.main.addNodeItem
-import charChem.compiler.main.getLastItem
 import charChem.compiler.parse.scan
-import charChem.compiler.parse.scanPostItem
 import charChem.core.ChemRadical
 import charChem.core.ChemSubObj
 import charChem.core.findElement
@@ -17,7 +15,7 @@ fun stateElement(compiler: ChemCompiler): Int {
             "Unknown element '[Elem]'",
             listOf("pos" to compiler.elementStartPos, "Elem" to id)
     )
-    val item = addNodeItem(compiler, elem)
-    scanPostItem(compiler) { item.n = it }
-    return compiler.setState(::stateAgentMid)
+    addNodeItem(compiler, elem)
+    // scanPostItem(compiler) { item.n = it }
+    return compiler.setState(::statePostItem)
 }

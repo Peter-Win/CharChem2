@@ -1,6 +1,7 @@
 package charChem.compiler.tests
 
 import charChem.compiler.compile
+import charChem.currentVersion
 import charChem.inspectors.makeTextFormula
 import charChem.math.Point
 import charChem.math.pointFromDeg
@@ -42,13 +43,16 @@ class TestFunctions {
     }
     @Test
     fun testVer() {
+        val hiVer = currentVersion[0]
+        val lowVer = currentVersion[1]
+        val curVer = "$hiVer.$lowVer"
         assertEquals(compile("\$ver()H2").getMessage(), "")
         assertEquals(compile("\$ver(1)H2").getMessage(), "")
-        assertEquals(compile("\$ver(2)H2").getMessage("en"),
-                "Formula requires CharChem version 2.0 instead of 1.2")
-        assertEquals(compile("\$ver(1,9)H2").getMessage("en"),
-                "Formula requires CharChem version 1.9 instead of 1.2")
-        assertEquals(compile("\$ver(2.3.4)").getMessage("ru"),
-        "Для формулы требуется CharChem версии 2.3 вместо 1.2")
+        assertEquals(compile("\$ver(${hiVer+1})H2").getMessage("en"),
+                "Formula requires CharChem version ${hiVer+1}.0 instead of $curVer")
+        assertEquals(compile("\$ver($hiVer,${lowVer+1})H2").getMessage("en"),
+                "Formula requires CharChem version $hiVer.${lowVer+1} instead of $curVer")
+        assertEquals(compile("\$ver($hiVer.${lowVer+1}.4)").getMessage("ru"),
+        "Для формулы требуется CharChem версии $hiVer.${lowVer+1} вместо $curVer")
     }
 }

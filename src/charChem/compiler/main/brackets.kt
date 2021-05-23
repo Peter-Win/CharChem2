@@ -4,11 +4,7 @@ import charChem.compiler.ChemCompiler
 import charChem.compiler.parse.scanPostItem
 import charChem.compiler.state.stateAgentMid
 import charChem.compiler.state.stateBracketBegin
-import charChem.core.ChemBracketBegin
-import charChem.core.ChemBracketEnd
-import charChem.core.ChemMulEnd
-import charChem.core.ChemNode
-import charChem.inspectors.makeTextFormula
+import charChem.core.*
 
 /*
 
@@ -36,8 +32,10 @@ class BracketDecl(pos: Int, val begin: ChemBracketBegin) : StackItem(pos) {
 fun openParentheses(compiler: ChemCompiler): Int {
     // Здесь возможны следующие случаи
     // - (* - открыть ветку
-    // - (charge) - степень окисления текущего элемента узла
     // - скобка для конструкций типа Ca(OH)2
+
+    // * степень окисления текущего элемента узла тоже в круглых скобках,
+    // но допустимо только после описания элемента. Поэтому см statePostItem
     compiler.pos++
     if (compiler.curChar() == '*') {
         return openBranch(compiler)

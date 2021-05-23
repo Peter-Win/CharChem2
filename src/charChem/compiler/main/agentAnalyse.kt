@@ -53,6 +53,10 @@ fun agentAnalyse(compiler: ChemCompiler, onDefault: () -> Int): Int {
             comma(compiler)
         '_' ->
             compiler.setState(::stateUniBond, 1)
+        'c' -> {
+            getNodeForced(compiler, true)
+            compiler.setState(::stateAgentMid, 1)
+        }
         else -> onDefault()
     }
 }

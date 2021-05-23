@@ -1,13 +1,12 @@
 package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
-import charChem.compiler.main.bindNodeToBond
-import charChem.compiler.main.bindNodeToCurrentBond
 import charChem.compiler.parse.isSpace
 import charChem.compiler.parse.scanId
 import charChem.compiler.parse.scanInt
+import charChem.core.ChemAtom
 import charChem.core.ChemNode
-import charChem.math.Point
+import charChem.core.findElement
 
 fun onReferenceError(compiler: ChemCompiler, ref: String, pos: Int): Nothing {
     compiler.error("Invalid node reference '[ref]'", listOf("ref" to ref, "pos" to pos))
@@ -30,9 +29,19 @@ fun useRefByNumber(compiler: ChemCompiler, n: Int, startPos: Int) {
     useRef(compiler, nodes[index])
 }
 
+private fun isAtomNode(node: ChemNode, atom: ChemAtom): Boolean =
+    node.items.size == 1 && node.items[0].obj == atom
+
+private fun useRefByAtom(compiler: ChemCompiler, atom: ChemAtom, startPos: Int) {
+    val nodes: List<ChemNode> = compiler.curAgent!!.nodes
+    useRef(compiler, nodes.find { isAtomNode(it, atom) } ?: onReferenceError(compiler, atom.id, startPos))
+}
+
 fun useRefById(compiler: ChemCompiler, id: String, startPos: Int) {
     compiler.references[id]?.let {
         useRef(compiler, it)
+    } ?: findElement(id)?.let {
+        useRefByAtom(compiler, it, startPos)
     } ?: onReferenceError(compiler, id, startPos)
 }
 
@@ -45,12 +54,9 @@ fun stateNodeRef(compiler: ChemCompiler): Int {
     if (n != null) {
         useRefByNumber(compiler, n, startPos)
     } else {
-        val id = scanId(compiler)
-        if (id != null) {
-            useRefById(compiler, id, startPos)
-        } else {
-            onReferenceError(compiler, compiler.curChar().toString(), startPos)
-        }
+        scanId(compiler)?.let { id -> useRefById(compiler, id, startPos) }
+                ?: onReferenceError(compiler, compiler.curChar().toString(), startPos)
+
     }
     return compiler.setState(::stateAgentMid)
 }

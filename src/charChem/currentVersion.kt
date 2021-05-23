@@ -1,3 +1,3 @@
 package charChem
 
-val currentVersion = listOf(1, 2, 0)
+val currentVersion = listOf(2, 0, 0)

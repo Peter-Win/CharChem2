@@ -54,6 +54,7 @@ val soft3 = BondDef(3, 0, 0, true, "≡")
 val bondDefDict = mapOf<String, BondDef>(
     "-" to soft1,
     "–" to soft1, // special character u2013
+    "−" to soft1, // u2212
     "=" to BondDef(2, 0, 0, true),
     "%" to soft3,
     "≡" to soft3,

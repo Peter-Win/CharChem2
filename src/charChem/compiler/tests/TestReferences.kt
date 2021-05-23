@@ -1,6 +1,7 @@
 package charChem.compiler.tests
 
 import charChem.compiler.compile
+import charChem.core.ChemBond
 import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula
 import charChem.lang.Lang
@@ -43,6 +44,22 @@ class TestReferences {
         val nodeC = agent.nodes[1]
         assertEquals(makeTextFormula(nodeC), "C")
         assertEquals(nodeC.bonds.size, 3)
+    }
+    @Test
+    fun testRefByFirstAtomName() {
+        // 0 1 2  3 4 5  6       7
+        // H-C-H; H-C-H; H|#C|#5|H
+        val expr = compile("H-C-H; H-C-H; H|#C|#5|H")
+        assertEquals(expr.getMessage(), "")
+        fun bondDef(bond: ChemBond): String = "${bond.nodes[0]?.index}${bond.linearText()}${bond.nodes[1]?.index}"
+        val bonds = expr.getAgents()[0].bonds
+        assertEquals(bondDef(bonds[0]), "0-1")
+        assertEquals(bondDef(bonds[1]), "1-2")
+        assertEquals(bondDef(bonds[2]), "3-4")
+        assertEquals(bondDef(bonds[3]), "4-5")
+        assertEquals(bondDef(bonds[4]), "6|1")
+        assertEquals(bondDef(bonds[5]), "1|4")
+        assertEquals(bondDef(bonds[6]), "4|7")
     }
     @Test
     fun testInvalidNumberReference() {

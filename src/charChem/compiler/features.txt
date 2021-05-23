@@ -20,11 +20,13 @@
 + Merge of bonds: |-`|`-|, -|-`|`-`-     - TestSimpleBond
 + Suffixes of simple bond (+0 +o +~ +w +ww +d +dd +h +x +v +vv +vvv) - TestSimpleBondSuffix
 + Charge of node - TestCalcCharge
+- oxidation state - H(+)N(+5)O(-2)3 -
 
 + Spaces in reagent: "H3C# -CH2#\n -OH" - TestReference
 + Use reference by node number, chain break: H-C-H; H|#2|H - TestReference
 + Use reference by negative number: H-N-H; H|#-3  - TestReference
 + Use label and reference by label: Cl-C:center-Cl; O||#center  - TestReference
++ Use reference by atom: H-C-H; H|#C|H - TestReference.testRefByFirstAtomName
 + Use subchains with soft nodes: O|S-Ca`|Mg`-#1   - TestChains.testMergeSubChainsWithSoftBond
 
 + Branch - TestBranch
@@ -36,6 +38,7 @@
 - 2Fe2O3*3H2O - multiplier coeff
 - 2(2Fe2O3*3H2O) - agent coeff and multipliers
 + Comma - (Ca,Mg)SO4 - TestComma
++ Auto node /c/// - TestAutoNode
 
 + Functions
 + $M, $nM - TestFunctions
@@ -43,10 +46,9 @@
 + ver
 + color, itemColor, itemColor1, atomColor, atomColor1 - TestColor
 - C
-- dblAlign
++ dblAlign
 - dots
 - dashes
-
 
 + polygonal bonds _p, _q - TestPolygonalBond
 + round bonds _o  - TestRingBond

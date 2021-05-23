@@ -2,7 +2,6 @@ package charChem.compiler.state
 
 import charChem.compiler.ChemCompiler
 import charChem.compiler.main.addNodeItem
-import charChem.compiler.main.getLastItem
 import charChem.compiler.parse.scanPostItem
 import charChem.compiler.parse.scanTo
 import charChem.core.ChemCustom
