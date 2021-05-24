@@ -1,10 +1,13 @@
 package charChem.compiler.parse.tests
 
 import charChem.compiler.createTestCompiler
+import charChem.compiler.parse.isId
 import charChem.compiler.parse.scanId
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class TestScanId {
     @Test
@@ -52,5 +55,14 @@ class TestScanId {
         assertEquals(compiler.curChar(), '/')
         assertNull(scanId(compiler))
         compiler.pos++
+    }
+    @Test
+    fun testIsId() {
+        assertTrue(isId("A"))
+        assertTrue(isId("hello1"))
+        assertFalse(isId(""))
+        assertFalse(isId("1"))
+        assertFalse(isId(" "))
+        assertFalse(isId("hello!"))
     }
 }
