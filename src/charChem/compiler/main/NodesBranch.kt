@@ -9,7 +9,7 @@ class NodesBranch {
     fun onBranchBegin() {
         val copy = mutableListOf<ChemNode>()
         copy.addAll(nodes)
-        nbStack.add(copy)
+        nbStack.add(0, copy)
     }
     fun onBranchEnd() {
         nodes = nbStack.removeAt(0)

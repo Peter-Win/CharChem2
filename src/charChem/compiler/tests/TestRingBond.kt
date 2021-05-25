@@ -135,4 +135,16 @@ class TestRingBond {
         assertEquals(expr.getMessage(), "")
         assertEquals(makeTextFormula(makeBrutto(expr)), "C14H10")
     }
+    @Test
+    fun testDDT() {
+        //        0 Cl
+        //      8   |   14
+        //    7/ \2/1\9/ \
+        //    |   |   |   |12
+        // 6 /5\ /3  10\ / \
+        //  Cl  4      11   Cl 13
+        val expr = compile("Cl|<`/|`/`\\<`/Cl>`|/\\_o>\\|\\/<\\Cl>`|`\\`/_o")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C13H9Cl3")
+    }
 }
