@@ -16,7 +16,7 @@ class ChainSys(val compiler: ChemCompiler) {
     private val subChainsDict: MutableMap<Int, MutableList<ChemNode>> = mutableMapOf()
 
     private var curChainId = 0
-    private var curSubChainId = 0
+    var curSubChainId = 0
     private var lastBond: ChemBond? = null
     private val stack: MutableList<ChemBond?> = mutableListOf()
 

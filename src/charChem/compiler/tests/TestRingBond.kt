@@ -124,4 +124,15 @@ class TestRingBond {
                 "CH2", "CH2", "N", "HC", "H2C", "C", "CH", "HC", "HC", "N", "CH"
         ))
     }
+    @Test
+    fun testPhenanthrene() {
+        //        8__9
+        //  13__7/   \1__2
+        // 12/   \6_0/   \3
+        //   \___/   \5__/4
+        //   11  10
+        val expr = compile("/-\\`/`-`\\_o`-`\\/-\\`/0_o`-0`/`-`\\/-\\0_o")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C14H10")
+    }
 }

@@ -108,5 +108,6 @@ fun mergeBonds(compiler: ChemCompiler, oldBond: ChemBond, newBond: ChemBond, new
     compiler.curNode = newNode
     compiler.curBond = oldBond
     // TODO: Возможно, здесь стоило бы пометить newBond, что его нельзя корректировать
+    newBond.soft = false
     compiler.chainSys.addBond(newBond)
 }
