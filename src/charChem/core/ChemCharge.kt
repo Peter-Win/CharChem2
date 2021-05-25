@@ -20,7 +20,9 @@ val rightSigned = Regex("""^\d+[-+]$""")
  */
 fun createCharge(chargeDescr: String, isLeft: Boolean = false): ChemCharge? {
     if (chargeDescr == "") return null
-    val text = chargeDescr.replace('–', '-') // Replace similar characters
+    val text = chargeDescr // Replace similar characters
+            .replace('–', '-') // \u2013
+            .replace('−', '-') // \u2212
     if (text in setOf("-", "--", "---"))
     // One or more minuses:	O^--
         return ChemCharge(text, -text.length.toDouble(), isLeft)

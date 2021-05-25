@@ -39,4 +39,12 @@ class TestCalcCharge {
 
         assertEquals(calcCharge(expr), Double.NaN)
     }
+    @Test
+    fun testSpecialChar() {
+        val expr = compile("ClO2^\u2212")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.nodes[0].charge!!.text, "-")
+        assertEquals(calcCharge(expr), -1.0)
+    }
 }
