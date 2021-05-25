@@ -23,8 +23,10 @@ fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
         chemBond.soft = false
         compiler.chainSys.changeBondToHard(chemBond)
     }
-    if (chemBond.soft)
+    if (chemBond.soft) {
         compiler.nodesBranch.onSubChain()
+        compiler.nodesBranch.onNode(node)
+    }
     compiler.curBond = null
     // Для жесткой связи можно вычислить координаты второго узла относительно первого
     val dir = chemBond.dir

@@ -110,4 +110,18 @@ class TestRingBond {
         listOf("| [0, 1]", "`/ [1, 2]", "`\\ [2, 3]", "`| [3, 4]", "/ [4, 5]", "\\ [5, 0]",
                 "o [0, 1, 2, 3, 4, 5]", "`\\ [4, 6]"))
     }
+    @Test
+    fun testWithPolygonalBond() {
+        //  9 N---CH  4 H2C---CH2 0
+        //   /     \     /    |
+        // HC 8   5 C--HC 3   |
+        //   \     /     \    |
+        // 7 HC---CH 6  2 N---CH2 1
+        val expr = compile("CH2_(y1.2)CH2_pN_pHC_pH2C_p; #-2`-C`/CH_p6HC_p6HC_p6N_p6CH_p6_o")
+        assertEquals(expr.getMessage(""), "")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.nodes.map { makeTextFormula(it) }, listOf(
+                "CH2", "CH2", "N", "HC", "H2C", "C", "CH", "HC", "HC", "N", "CH"
+        ))
+    }
 }
