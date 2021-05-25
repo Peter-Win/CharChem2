@@ -163,10 +163,12 @@ fun setBondProperties(compiler: ChemCompiler, bond: ChemBond, params: BondParams
 }
 
 fun createUniversalBond(compiler: ChemCompiler, args: List<String>, argPos: List<Int>) {
-    if (compiler.curNode == null) {
-        openNode(compiler, true)
-    }
     val bond = createCommonBond(compiler)
+    if (compiler.curNode == null) {
+        println("createUniversalBond > openNode")
+        // openNode(compiler, true)
+        getNodeForBondStart(compiler, bond)
+    }
     val params = makeParamsDict(args, argPos)
     bond.dir = calcBondDirection(compiler, params)
     setBondProperties(compiler, bond, params)

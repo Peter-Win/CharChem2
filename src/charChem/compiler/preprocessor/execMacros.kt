@@ -19,10 +19,10 @@ fun applyParamValues(def: MacroParams, params: List<String>, ctx: PreProcCtx): P
             }
         }
         if (!ready) {
-            val name = def.names[curIndex++]
+            val name = def.names.getOrNull(curIndex++)
             // Индексный параметр может быть пропущен, если пуст.
             // Тогда вместо него будет использовано значение по умолчанию
-            if (paramValue.isNotEmpty()) {
+            if (name != null && paramValue.isNotEmpty()) {
                 def.dict[name] = paramValue
             }
         }
