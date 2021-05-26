@@ -218,4 +218,9 @@ class TestBrackets {
                 10 * (PeriodicTable.C.mass * 2 + PeriodicTable.H.mass + PeriodicTable.Cl.mass)
         ))
     }
+    @Test
+    fun testConnectOfLastNodeInBracketsWithNextBond() {
+        val expr = compile("[HO/`|O|\\O^-]2_(x1.6,y#-1;-2,N0)Mg^2+")
+        assertEquals(expr.getMessage(), "")
+    }
 }

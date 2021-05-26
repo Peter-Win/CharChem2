@@ -4,6 +4,7 @@ import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
 import charChem.core.ChemBracketEnd
 import charChem.core.ChemNode
+import charChem.inspectors.makeTextFormula
 import kotlin.math.roundToInt
 
 fun createCommonBond(compiler: ChemCompiler): ChemBond {

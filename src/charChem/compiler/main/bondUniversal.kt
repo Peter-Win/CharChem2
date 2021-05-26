@@ -3,6 +3,8 @@ package charChem.compiler.main
 import charChem.compiler.ChemCompiler
 import charChem.compiler.parse.parseNum
 import charChem.core.ChemBond
+import charChem.inspectors.makeBrutto
+import charChem.inspectors.makeTextFormula
 import charChem.math.Point
 import charChem.math.pointFromDeg
 import charChem.math.pointFromRad
@@ -54,7 +56,8 @@ fun parseRefsList(compiler: ChemCompiler, value: String, pos: Int): Point {
     val vectorSum = points.reduce { sum, vec -> sum + vec }
     val midPt = vectorSum * (1.0 / points.size.toDouble())
     // Здесь используется допущение, что перед любой универсальной связью проверяется наличие узла
-    return midPt - compiler.curNode!!.pt
+    val curNode = compiler.curNode ?: compiler.error("Expected node before bond", listOf("pos" to pos))
+    return midPt - curNode.pt
 }
 
 fun parseAxisCoordinate(compiler: ChemCompiler, isX: Boolean, value: String, pos: Int): Double {
@@ -165,9 +168,7 @@ fun setBondProperties(compiler: ChemCompiler, bond: ChemBond, params: BondParams
 fun createUniversalBond(compiler: ChemCompiler, args: List<String>, argPos: List<Int>) {
     val bond = createCommonBond(compiler)
     if (compiler.curNode == null) {
-        println("createUniversalBond > openNode")
-        // openNode(compiler, true)
-        getNodeForBondStart(compiler, bond)
+        compiler.curNode = getNodeForBondStart(compiler, bond)
     }
     val params = makeParamsDict(args, argPos)
     bond.dir = calcBondDirection(compiler, params)

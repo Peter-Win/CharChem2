@@ -17,4 +17,5 @@ fun compilerTest() {
             throw Error(expr.getMessage("ru"))
         }
     }
+    println("Success!")
 }
