@@ -86,7 +86,7 @@ class ChainSys(val compiler: ChemCompiler) {
         val nodes = subChainsDict[srcId]!!
         nodes.forEach {
             it.subChain = dstId
-            it.pt -= step
+            it.pt += step
         }
         subChainsDict[dstId]!!.addAll(nodes)
         subChainsDict.remove(srcId)
@@ -126,7 +126,8 @@ class ChainSys(val compiler: ChemCompiler) {
             // Если разные подцепи соединяются мягкой связью, то они остаются разными
             // иначе подцепи сращиваются
             if (!bond.soft) {
-                mergeSubChains(dstSubChain, srcSubChain, bond.dir!!)
+                val step = dstNode.pt - srcNode.pt - bond.dir!!
+                mergeSubChains(dstSubChain, srcSubChain, step)
             }
         } else {
             // Но если узлы в одной подцепи, то корректировать шаг связи

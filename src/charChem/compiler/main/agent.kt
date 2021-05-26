@@ -28,6 +28,7 @@ fun closeChain(compiler: ChemCompiler) {
             openNode(compiler, true)
         }
     }
+    compiler.curBond = null
     closeNode(compiler)
     compiler.chainSys.closeChain()
 }
@@ -60,7 +61,7 @@ fun finalUpdateBondsForNodes(agent: ChemAgent) {
     // update bonds field for all nodes
     agent.walk(object: Visitor() {
         override fun bond(obj: ChemBond) {
-            obj.nodes.forEach { it?.bonds?.add(obj) }
+            obj.nodes.forEach { it?.addBond(obj) }
         }
     })
 }

@@ -170,4 +170,19 @@ class TestChains {
         assertEquals(n[6].pt, Point(0.0, -2.0))
         assertEquals(n[7].pt, Point(0.0, 1.0))
     }
+    @Test
+    fun testCoordinates() {
+        //    0  1  2  3
+        // -1       2--3
+        //             |
+        //  0 0--------1
+        val expr = compile("_(x3); -|#2")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        val nodes = agent.nodes
+        assertEquals(nodes[0].subChain, nodes[2].subChain)
+        assertEquals(nodes.map { it.pt }, listOf(
+                Point(), Point(3.0, 0.0), Point(2.0, -1.0), Point(3.0, -1.0)
+        ))
+    }
 }

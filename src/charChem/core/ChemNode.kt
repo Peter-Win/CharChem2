@@ -49,6 +49,8 @@ class ChemNode(var pt: Point = Point()) : ChemObj(), ChemChargeOwner {
         }
         visitor.nodePost(this)
     }
+    
+    fun addBond(bond: ChemBond) = bonds.add(bond)
 
     fun getCenterItem(): ChemNodeItem? {
         var curPriority = ItemPriority.NA

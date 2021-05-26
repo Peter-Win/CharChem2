@@ -16,7 +16,6 @@ fun createCommonBond(compiler: ChemCompiler): ChemBond {
 fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     compiler.curNode = node
 
-    node.bonds.add(chemBond)
     chemBond.nodes[1] = node
     val node0 = chemBond.nodes[0]
     val auto0: Boolean = node0?.autoMode ?: false
