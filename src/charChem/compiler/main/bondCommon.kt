@@ -76,6 +76,10 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
         bond.align = compiler.varAlign
     }
     bond.nodes[0] = oldNode
+    if (bond.isAuto && oldNode.autoMode) {
+        // Если первый узел простой связи является автоматическим, то связь не мягкая
+        bond.soft = false
+    }
     bond.color = compiler.varColor
     // Здесь можно сделать предположение о том, что связь входит вкакой-либо из узлов своей подцепи
     // Это предположение неверно для случаев:

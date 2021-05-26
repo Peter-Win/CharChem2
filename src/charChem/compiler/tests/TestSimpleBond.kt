@@ -136,4 +136,16 @@ class TestSimpleBond {
         assertEquals(expr.getMessage(), "")
         assertEquals(makeTextFormula(makeBrutto(expr)), "CH4O")
     }
+
+    @Test
+    fun testAzetidine() {
+        val expr = compile("NH`|`-|-")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.bonds.map { "${it.linearText()}${if (it.soft) "*" else ""}" },
+                listOf("`|", "`-", "|", "-"))
+        assertEquals(agent.nodes.map { makeTextFormula(makeBrutto(it)) },
+                listOf("HN", "CH2", "CH2", "CH2"))
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C3H7N")
+    }
 }
