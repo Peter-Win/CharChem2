@@ -4,6 +4,7 @@ import charChem.compiler.compile
 import charChem.core.PeriodicTable
 import charChem.inspectors.calcMass
 import charChem.inspectors.isAbstract
+import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula
 import charChem.lang.Lang
 import charChem.textRules.rulesHtml
