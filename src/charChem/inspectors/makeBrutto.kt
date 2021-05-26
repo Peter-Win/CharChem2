@@ -12,7 +12,9 @@ fun makeBrutto(expr: ChemObj): ChemExpr {
     elemList.sortByHill()
     elemList.list.forEach{ elemRec ->
         val item = elemRec.elem ?: ChemCustom(elemRec.id)
-        node.items.add(ChemNodeItem(item, ChemK(elemRec.n)))
+        if (!isEmptyNode(item)) {
+            node.items.add(ChemNodeItem(item, ChemK(elemRec.n)))
+        }
     }
     if (elemList.charge != 0.0) {
         node.charge = ChemCharge(makeChargeText(elemList.charge), elemList.charge)

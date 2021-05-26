@@ -16,8 +16,8 @@ fun useRef(compiler: ChemCompiler, node: ChemNode) {
     compiler.curBond?.let { bond ->
         bond.nodes[1] = node
         compiler.chainSys.bondToRef(bond)
-        // bindNodeToBond(compiler, node, bond)
     }
+    compiler.curNode = node
 }
 
 fun useRefByNumber(compiler: ChemCompiler, n: Int, startPos: Int) {

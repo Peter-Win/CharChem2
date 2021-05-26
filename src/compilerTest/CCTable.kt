@@ -2,11 +2,11 @@ package compilerTest
 
 import java.io.File
 
-typealias Row = List<String>
+typealias Row = List<String?>
 typealias CCTable = List<Row>
 
-private fun unescape(value: String): String =
-        value
+private fun unescape(value: String): String? =
+        if (value == "\\0") null else value
                 .replace("\\t", "\t")
                 .replace("\\n", "\n")
                 .replace("\\r", "\r")

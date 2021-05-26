@@ -2,7 +2,7 @@ package charChem.core
 
 import charChem.math.Point
 
-fun isEmptyNode(node: ChemNode): Boolean {
+fun isEmptyNode(node: ChemObj): Boolean {
     return !node.walkExt(object : Visitor() {
         override fun atom(obj: ChemAtom) = stop()
         override fun radical(obj: ChemRadical) = stop()
