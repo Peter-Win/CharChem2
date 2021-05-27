@@ -16,7 +16,8 @@ fun useRef(compiler: ChemCompiler, node: ChemNode) {
     compiler.curBond?.let { bond ->
         bond.nodes[1] = node
         compiler.chainSys.bondToRef(bond)
-    }
+    } ?: compiler.chainSys.addNode(node)
+
     compiler.curNode = node
 }
 
@@ -30,7 +31,7 @@ fun useRefByNumber(compiler: ChemCompiler, n: Int, startPos: Int) {
 }
 
 private fun isAtomNode(node: ChemNode, atom: ChemAtom): Boolean =
-    node.items.size == 1 && node.items[0].obj == atom
+        node.items.size == 1 && node.items[0].obj == atom
 
 private fun useRefByAtom(compiler: ChemCompiler, atom: ChemAtom, startPos: Int) {
     val nodes: List<ChemNode> = compiler.curAgent!!.nodes

@@ -52,7 +52,7 @@ class ChainSys(val compiler: ChemCompiler) {
         return newId
     }
 
-    private fun getCurSubChain(): MutableList<ChemNode> {
+   private fun getCurSubChain(): MutableList<ChemNode> {
         if (curSubChainId == 0) {
             curSubChainId = createSubChain()
         }
@@ -64,6 +64,9 @@ class ChainSys(val compiler: ChemCompiler) {
             getCurSubChain().add(node)
             node.chain = curChainId
             node.subChain = curSubChainId
+        } else {
+            curChainId = node.chain
+            curSubChainId = node.subChain
         }
     }
 
