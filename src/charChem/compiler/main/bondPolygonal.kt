@@ -27,11 +27,11 @@ fun createPolygonalBond(compiler: ChemCompiler) {
         strCount += compiler.curChar()
         compiler.pos++
     }
-    val count = sign * (strCount.toIntOrNull() ?: 0)
+    val count = strCount.toIntOrNull() ?: 0
 
     val bond = createCommonBond(compiler)
     bond.n = multiplicity.toDouble()
-    bond.dir = createPolygonStep(compiler, if (count == 0) 5 else count, compiler.varLength)
+    bond.dir = createPolygonStep(compiler, sign * (if (count == 0) 5 else count), compiler.varLength)
 
     scanBondSuffix(compiler, bond)
     bond.tx = compiler.subStr(beginPos)

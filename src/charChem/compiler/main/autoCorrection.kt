@@ -4,9 +4,6 @@ import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
 import charChem.math.Point
 import charChem.math.is0
-import charChem.math.pointFromRad
-import kotlin.math.abs
-import kotlin.math.roundToInt
 
 val defaultSlope: Double = Math.PI / 6.0 // 30° - стандартный наклон кратких описаний связей
 val correctedSlope = Math.PI / 3.0
@@ -20,6 +17,20 @@ fun correct(bond: ChemBond, length: Double?) {
     bond.dir = makeBondStep(newAngleDeg(bond), length ?: bond.dir!!.length())
     bond.isCorr = true
     bond.nodes[1]?.let { it.pt = bond.calcPt() }
+}
+fun correctPrev(compiler: ChemCompiler, prevBond: ChemBond, length: Double?) {
+    val corrNode = prevBond.nodes[1]
+    if (corrNode == null) {
+        correct(prevBond, length)
+        return
+    }
+    val subChain = corrNode.subChain
+    val oldPos = corrNode.pt
+    correct(prevBond, length)
+    val step = corrNode.pt - oldPos
+    val allNodes = compiler.curAgent!!.nodes
+    val dstNodes = allNodes.subList(corrNode.index + 1, allNodes.size).filter { it.subChain == subChain }
+    dstNodes.forEach { it.pt += step }
 }
 
 fun getLastBond(compiler: ChemCompiler): ChemBond? {
@@ -52,12 +63,12 @@ fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
     }
     // Варианты с коррекцией предыдущей связи
     if (prevBond.slope != 0 && !prevBond.isCorr && slopeSign != 0 && prevBond.isNeg != bond.isNeg) {
-        correct(prevBond, null)
+        correctPrev(compiler, prevBond, null)
         correct(bond, compiler.varLength)
         return
     }
     // Стыковка с горизонтальной связью
     if (prevBond.slope != 0 && !prevBond.isCorr && bond.isHorizontal()) {
-        correct(prevBond, null)
+        correctPrev(compiler, prevBond, null)
     }
 }

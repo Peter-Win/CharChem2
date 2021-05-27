@@ -6,6 +6,7 @@ import charChem.math.Point
 import charChem.math.pointFromDeg
 import org.testng.annotations.Test
 import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -176,6 +177,36 @@ class TestAutoCorrection {
         val expr = compile("\$slope(30)-/")
         assertEquals(expr.getMessage(), "")
         assertEquals(getAngle(expr.getAgents()[0]), -30)
+    }
+
+    @Test
+    fun testCoordinatesCorrection() {
+        //  60°       60°60°
+        // __/⸌30° -> __/\__
+        //     |         |
+        val expr = compile("-/\\<|>-")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        val q32 = sqrt(3.0) /2.0
+        assertEquals(agent.nodes.map { it.pt }, listOf(
+                Point(), Point(1.0, 0.0), Point(1.5, -q32), Point(2.0, 0.0),
+                Point(2.0, 1.0), Point(3.0, 0.0)
+        ))
+    }
+
+    @Test
+    fun testCoordinatesCorrection2() {
+        //      __       __
+        // 30°⸌/60° -> \/
+        //             /
+        //
+        val expr = compile("\\<_(A-60)->`/")
+        assertEquals(expr.getMessage(), "")
+        val q32 = sqrt(3.0) /2.0
+        assertEquals(expr.getAgents()[0].nodes.map { it.pt }, listOf(
+                Point(), Point(0.5, q32), Point(1.0, 0.0), Point(2.0, 0.0),
+                Point(0.0, 2*q32)
+        ))
     }
 
     // TODO: Надо проверить, что другие типы связей не приводят к коррекции

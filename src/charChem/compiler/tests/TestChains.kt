@@ -5,6 +5,7 @@ import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula
 import charChem.math.Point
 import org.testng.annotations.Test
+import kotlin.math.sqrt
 import kotlin.test.*
 
 class TestChains {

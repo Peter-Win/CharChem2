@@ -2,6 +2,7 @@ package charChem.compiler.tests
 
 import charChem.compiler.compile
 import charChem.core.ChemBond
+import charChem.core.ChemExpr
 import charChem.core.ChemNode
 import charChem.core.ChemObj
 import charChem.inspectors.makeBrutto
@@ -13,12 +14,28 @@ import kotlin.test.assertEquals
 
 private fun nodeCvt(node: ChemNode): ChemObj = if (node.autoMode) makeBrutto(node) else node
 
+private fun nodeText(node: ChemNode): String = "${node.index}:${makeTextFormula(nodeCvt(node))}"
+
+private fun makeNodesText(expr: ChemExpr) = expr.getAgents()[0].nodes.map { nodeText(it) }
+
+fun bondInfo(i: Int, it: ChemBond) = "$i:${it.nodes[0]?.index}" +
+        "(${if (it.soft) "~" else ""}${it.dir!!.polarAngleDeg().roundToInt()}" +
+        "${if (it.n != 1.0) "*${it.n.roundToInt()}" else ""})" +
+        "${it.nodes[1]?.index}"
+
+/**
+ * format: <bondIndex>:<srcNodeIndex>([~if soft]<angle>[*<multiplicity> if!=1])<dstNodeIndex>
+ */
+fun makeBondsInfo(expr: ChemExpr) = expr.getAgents()[0].bonds.mapIndexed { i, it -> bondInfo(i, it) }
+
 private fun diff(actualList: List<String>, needList: List<String>): List<String> =
         actualList.foldIndexed(mutableListOf()) { i, list, s ->
             val need = needList.getOrNull(i)
             if (s != need) {
-                list.add("$s≠${if (need != null && need.indexOf(':')>=0) 
-                    need.substringAfter(':') else need}")
+                list.add("$s≠${
+                    if (need != null && need.indexOf(':') >= 0)
+                        need.substringAfter(':') else need
+                }")
             }
             list
         }
@@ -37,6 +54,7 @@ class TestComplexCases {
                 listOf("CH", "CH", "CH", "N", "H", "CH", "\"1\"", "\"2\"", "\"3\"", "\"4\"", "\"5\""))
         assertEquals(makeTextFormula(makeBrutto(expr)), "C4H5N")
     }
+
     @Test
     fun testAdenosineTriphosphate() {
         //                                 H2N 27
@@ -53,12 +71,13 @@ class TestComplexCases {
         assertEquals(expr.getMessage(), "")
         val agent = expr.getAgents()[0]
         val needBonds = listOf("0-1", "1|2", "3||1", "1-4", "4-5", "5|6", "7||5", "5-8", "8-9", "9|10",
-        "11||9", "9-12", "12-13", "13|14", "14W+15", "15|16", "15-17", "17|18", "17W-19", "19<20", "20<<14",
-        "21||22", "22_p23", "23|19", "23_p24", "24_pp25", "25_p21", "21/26", "26`|27", "26\\\\28",
-        "28|29", "29`//30", "30`\\22")
+                "11||9", "9-12", "12-13", "13|14", "14W+15", "15|16", "15-17", "17|18", "17W-19", "19<20", "20<<14",
+                "21||22", "22_p23", "23|19", "23_p24", "24_pp25", "25_p21", "21/26", "26`|27", "26\\\\28",
+                "28|29", "29`//30", "30`\\22")
+
         fun bondTxt(bond: ChemBond): String = "${bond.nodes[0]?.index}${bond.linearText()}${bond.nodes[1]?.index}"
         val realBonds = agent.bonds.map { bondTxt(it) }
-        assertEquals(realBonds.foldIndexed(mutableListOf<String>()){index, acc, s ->
+        assertEquals(realBonds.foldIndexed(mutableListOf<String>()) { index, acc, s ->
             val need = needBonds.getOrNull(index)
             if (s != need) acc.add("$s≠$need")
             acc
@@ -75,6 +94,7 @@ class TestComplexCases {
         }, listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C10H16N5O13P3")
     }
+
     @Test
     fun testBetaCyfluthrin() {
         val expr = compile("\$slope(45)Cl-C<`|Cl>\\\\CH\\|<|CH3><`/H3C>_q3_q3; \$slope()#-1-C<//O>\\O-C<`|H><|C%N>-\\\\-//<-F>`\\`-`/;#-1-/O-\\\\-//`\\`=`/")
@@ -92,12 +112,6 @@ class TestComplexCases {
         //  H3C  CH3 6    |    \\   //19
         //             14 C%N  17---18
         //                  15
-//        println(agent.nodes.map { "${it.index}:${it.subChain}" })
-        val actualBonds = agent.bonds.mapIndexed {i, it -> "$i:${it.nodes[0]?.index}" +
-                "(${if (it.soft) "~" else ""}${it.dir!!.polarAngleDeg().roundToInt()}" +
-                "${if (it.n != 1.0) "*${it.n.roundToInt()}" else ""})" +
-                "${it.nodes[1]?.index}" }
-        // format: <bondIndex>:<srcNodeIndex>([~if soft]<angle>[*<multiplicity> if!=1])<dstNodeIndex>
         val needBonds = listOf(
                 "0:0(~0)1", "1:1(-90)2", "2:1(45*2)3", "3:3(45)4", "4:4(90)5",
                 "5:5(90)6", "6:5(135)7", "7:5(-30)8", "8:8(-150)4", "9:8(0)9",
@@ -107,12 +121,35 @@ class TestComplexCases {
                 "25:23(0)24", "26:24(60*2)25", "27:25(0)26", "28:26(-60*2)27", "29:27(-120)28",
                 "30:28(180*2)29", "31:29(120)24"
         )
-        assertEquals(diff(actualBonds, needBonds), listOf())
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
         val actualNodes = agent.nodes.map { "${it.index}:${makeTextFormula(nodeCvt(it), rulesCharChem)}" }
         val needNodes = listOf("0:Cl", "1:C", "2:Cl", "3:CH", "4:CH", "5:C", "6:CH3", "7:H3C", "8:CH", "9:C",
-        "10:O", "11:O", "12:C", "13:H", "14:C", "15:N", "16:C", "17:CH", "18:CH", "19:C",
-        "20:F", "21:C", "22:CH", "23:O", "24:C", "25:CH", "26:CH", "27:CH", "28:CH", "29:CH")
+                "10:O", "11:O", "12:C", "13:H", "14:C", "15:N", "16:C", "17:CH", "18:CH", "19:C",
+                "20:F", "21:C", "22:CH", "23:O", "24:C", "25:CH", "26:CH", "27:CH", "28:CH", "29:CH")
         assertEquals(diff(actualNodes, needNodes), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C22H18Cl2FNO3")
+    }
+
+    @Test
+    fun testClothianidin() {
+        //    O2N 5
+        //       \
+        //        N 4
+        //        ||
+        //        C         14 S     Cl 13
+        //       /3\         /   \12/
+        // H3C--N   N--H2C---9    ||
+        //   0  |1  |6   8   \\   N
+        //      H 2 H 7       10 / 11
+        val expr = compile("H3C-N<|H>/C<`||N`\\O2`N>\\N<|H>-H2C-_(A54,N2)_qN`||</Cl>_qS_q")
+        assertEquals(expr.getMessage(), "")
+        val needBonds = listOf("0:0(~0)1", "1:1(90)2", "2:1(-60)3", "3:3(-90*2)4", "4:4(-150)5",
+                "5:3(60)6", "6:6(90)7", "7:6(~0)8", "8:8(0)9", "9:9(54*2)10",
+                "10:10(-18)11", "11:11(-90*2)12", "12:12(-30)13", "13:12(-162)14", "14:14(126)9")
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+        val needNodes = listOf("0:H3C", "1:N", "2:H", "3:C", "4:N", "5:O2N", "6:N", "7:H", "8:H2C", "9:C",
+                "10:CH", "11:N", "12:C", "13:Cl", "14:S")
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C6H8ClN5O2S")
     }
 }
