@@ -152,4 +152,27 @@ class TestComplexCases {
         assertEquals(diff(makeNodesText(expr), needNodes), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C6H8ClN5O2S")
     }
+
+    @Test
+    fun testCarbofuran() {
+        //   5
+        // 6/\\0/4    14
+        // ||  |  3\ /
+        // 7\//1\O / \
+        //  8|   2    15
+        //   O   O 11
+        //  9 \ //
+        //  10 |
+        //    HN 12
+        //      \ 13
+        val expr = compile("|_qO_q:a_q_q`\\\\`/||\\/`/|O\\/O`/|HN\\;\$slope(45)`/#a\\")
+        assertEquals(expr.getMessage(), "")
+        val needBonds = listOf("0:0(90)1", "1:1(18)2", "2:2(-54)3", "3:3(-126)4", "4:4(162)0",
+                "5:0(-150*2)5", "6:5(150)6", "7:6(90*2)7", "8:7(30)8", "9:8(-30*2)1",
+                "10:8(90)9", "11:9(30)10", "12:10(-30*2)11", "13:10(90)12", "14:12(30)13",
+                "15:14(135)3", "16:3(45)15"
+        )
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C12H15NO3")
+    }
 }

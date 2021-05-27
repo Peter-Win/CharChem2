@@ -210,4 +210,15 @@ class TestAutoCorrection {
     }
 
     // TODO: Надо проверить, что другие типы связей не приводят к коррекции
+    @Test
+    fun testNoCorrectionIV() {
+        val expr = compile("|\\/")
+        assertEquals(expr.getMessage(), "")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.bonds.map { it.dir!!.polarAngleDeg().roundToInt() }, listOf(90, 30, -30))
+        val q32 = sqrt(3.0) / 2.0
+        assertEquals(agent.nodes.map { it.pt }, listOf(
+                Point(), Point(0.0, 1.0), Point(q32, 1.5), Point(q32*2, 1.0)
+        ))
+    }
 }

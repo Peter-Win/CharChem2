@@ -18,6 +18,7 @@ fun correct(bond: ChemBond, length: Double?) {
     bond.isCorr = true
     bond.nodes[1]?.let { it.pt = bond.calcPt() }
 }
+
 fun correctPrev(compiler: ChemCompiler, prevBond: ChemBond, length: Double?) {
     val corrNode = prevBond.nodes[1]
     if (corrNode == null) {
@@ -62,7 +63,13 @@ fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
         return
     }
     // Варианты с коррекцией предыдущей связи
-    if (prevBond.slope != 0 && !prevBond.isCorr && slopeSign != 0 && prevBond.isNeg != bond.isNeg) {
+    if (
+            prevBond.slope != 0 &&
+            !prevBond.isCorr &&
+            slopeSign != 0 &&
+            prevBond.isNeg != bond.isNeg &&
+            prevBond.slope != bond.slope
+    ) {
         correctPrev(compiler, prevBond, null)
         correct(bond, compiler.varLength)
         return
