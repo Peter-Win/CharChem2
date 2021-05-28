@@ -18,10 +18,16 @@ private fun nodeText(node: ChemNode): String = "${node.index}:${makeTextFormula(
 
 private fun makeNodesText(expr: ChemExpr) = expr.getAgents()[0].nodes.map { nodeText(it) }
 
-fun bondInfo(i: Int, it: ChemBond) = "$i:${it.nodes[0]?.index}" +
+private fun bondTextStd(it: ChemBond) = "${it.nodes[0]?.index}" +
         "(${if (it.soft) "~" else ""}${it.dir!!.polarAngleDeg().roundToInt()}" +
         "${if (it.n != 1.0) "*${it.n.roundToInt()}" else ""})" +
         "${it.nodes[1]?.index}"
+
+private fun bondTextExt(bond: ChemBond) = "${bond.linearText()}${bond.nodes.map { it?.index }}"
+
+private fun bondText(bond: ChemBond) = if (bond.nodes.size == 2) bondTextStd(bond) else bondTextExt(bond)
+
+private fun bondInfo(i: Int, it: ChemBond) = "$i:${bondText(it)}"
 
 /**
  * format: <bondIndex>:<srcNodeIndex>([~if soft]<angle>[*<multiplicity> if!=1])<dstNodeIndex>
@@ -204,7 +210,24 @@ class TestComplexCases {
                 "15:15(45*0)16", "16:11(30)17", "17:17(90)18", "18:18(30*2)19", "19:18(150)20"
         )
         assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
-
         assertEquals(makeTextFormula(makeBrutto(expr)), "C10H14N2Na2O8")
+    }
+    @Test
+    fun testAnthracene() {
+        //   13   6   1
+        // 12/ \7/ \0/ \ 2
+        //  |   |   |   |
+        // 11\ /8\ /5\ / 3
+        //   10   9   4
+        val expr = compile("/\\|`/`\\`|_o`\\`/|\\/_o;#-2`/`\\`|/\\|0_o")
+        assertEquals(expr.getMessage(), "")
+        val needBonds = listOf(
+                "0:0(-30)1", "1:1(30)2", "2:2(90)3", "3:3(150)4", "4:4(-150)5",
+                "5:5(-90)0", "6:o[0, 1, 2, 3, 4, 5]", "7:0(-150)6", "8:6(150)7", "9:7(90)8",
+                "10:8(30)9", "11:9(-30)5", "12:o[5, 0, 6, 7, 8, 9]", "13:8(150)10", "14:10(-150)11",
+                "15:11(-90)12", "16:12(-30)13", "17:13(30)7", "18:o[8, 10, 11, 12, 13, 7]"
+        )
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C14H10")
     }
 }

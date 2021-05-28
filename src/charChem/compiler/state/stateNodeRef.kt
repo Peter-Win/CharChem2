@@ -13,11 +13,14 @@ fun onReferenceError(compiler: ChemCompiler, ref: String, pos: Int): Nothing {
 }
 
 fun useRef(compiler: ChemCompiler, node: ChemNode) {
-    compiler.curBond?.let { bond ->
-        bond.nodes[1] = node
-        compiler.chainSys.bondToRef(bond)
-    } ?: compiler.chainSys.addNode(node)
-
+    val curBond = compiler.curBond
+    if (curBond != null) {
+        curBond.nodes[1] = node
+        compiler.chainSys.bondToRef(curBond)
+    } else {
+        compiler.chainSys.addNode(node)
+        compiler.nodesBranch.onNode(node)
+    }
     compiler.curNode = node
 }
 

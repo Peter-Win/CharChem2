@@ -31,6 +31,7 @@ fun closeChain(compiler: ChemCompiler) {
     compiler.curBond = null
     closeNode(compiler)
     compiler.chainSys.closeChain()
+    compiler.nodesBranch.onSubChain()
 }
 
 fun onCloseAgent(compiler: ChemCompiler) {
