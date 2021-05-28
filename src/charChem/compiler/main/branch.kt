@@ -30,7 +30,7 @@ fun closeBranch(compiler: ChemCompiler): Int {
             compiler.error("Cant close branch before bracket",
                     listOf("pos" to compiler.pos, "pos0" to decl.pos + 1))
         }
-        bindNodeToCurrentBond(compiler, compiler.curNode ?: openNode(compiler, true))
+        bindNodeToCurrentBond(compiler, compiler.curNode)
         closeNode(compiler)
 
         compiler.curNode = decl.node

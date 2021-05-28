@@ -175,4 +175,36 @@ class TestComplexCases {
         assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C12H15NO3")
     }
+    @Test
+    fun testTrilonB() {
+        //                   O 14
+        //                  ||
+        // 2 O   O-0    12 /13\
+        //    \\/         |    OH 15
+        //     |1    9    N         16
+        //    3 \   / \  /11\ 17  [Na+]2
+        //      4 N    10    |18
+        // 8 HO   |         /\\
+        //     \ / 5    20 O- O 19
+        //      6
+        //      ||
+        //      O 7
+        val expr = compile("O^-`/`\\O\\|\\N|`/|O`|`\\HO;#N/\\/N<`|/`|O|\\OH_(x1,y1,N0,TSpace)[Na^+]2>\\|\\O`\\`/O^-")
+        assertEquals(expr.getMessage(), "")
+        val needNodes = listOf(
+                "0:O-", "1:C", "2:O", "3:CH2", "4:N", "5:CH2", "6:C", "7:O", "8:HO", "9:CH2",
+                "10:CH2", "11:N", "12:CH2", "13:C", "14:O", "15:OH", "16:Na+", "17:CH2",
+                "18:C", "19:O", "20:O-"
+        )
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        val needBonds = listOf(
+                "0:0(150)1", "1:1(-150*2)2", "2:1(90)3", "3:3(30)4", "4:4(90)5",
+                "5:5(150)6", "6:6(90*2)7", "7:6(-150)8", "8:4(-30)9", "9:9(30)10",
+                "10:10(-30)11", "11:11(-90)12", "12:12(-30)13", "13:13(-90*2)14", "14:13(30)15",
+                "15:15(45*0)16", "16:11(30)17", "17:17(90)18", "18:18(30*2)19", "19:18(150)20"
+        )
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C10H14N2Na2O8")
+    }
 }

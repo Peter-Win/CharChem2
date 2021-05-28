@@ -36,8 +36,8 @@ fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     }
 }
 
-fun bindNodeToCurrentBond(compiler: ChemCompiler, node: ChemNode) {
-    compiler.curBond?.let { bindNodeToBond(compiler, node, it) }
+fun bindNodeToCurrentBond(compiler: ChemCompiler, node: ChemNode?) {
+    compiler.curBond?.let { bindNodeToBond(compiler, node ?: openNode(compiler, true), it) }
 }
 
 fun findBondBetweenNodes(compiler: ChemCompiler, nodeA: ChemNode, nodeB: ChemNode): ChemBond? {
