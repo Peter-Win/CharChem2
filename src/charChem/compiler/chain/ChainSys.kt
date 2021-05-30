@@ -25,6 +25,7 @@ class ChainSys(val compiler: ChemCompiler) {
     fun onBranchBegin() {
         stack.add(0, lastBond)
     }
+
     fun onBranchEnd() {
         lastBond = stack.removeAt(0)
     }
@@ -52,7 +53,7 @@ class ChainSys(val compiler: ChemCompiler) {
         return newId
     }
 
-   private fun getCurSubChain(): MutableList<ChemNode> {
+    private fun getCurSubChain(): MutableList<ChemNode> {
         if (curSubChainId == 0) {
             curSubChainId = createSubChain()
         }
@@ -113,6 +114,12 @@ class ChainSys(val compiler: ChemCompiler) {
         }
     }
 
+    private fun makeTransitionBond(bond: ChemBond) {
+        bond.soft = false
+        bond.dir = null
+        bond.nodes.getOrNull(1)?.let { addNode(it) }
+    }
+
     /**
      * Связь, у которой второй узел указан через ссылку
      */
@@ -122,15 +129,23 @@ class ChainSys(val compiler: ChemCompiler) {
             return
         }
         // Если узлы принадлежат разным цепям, то нужно срастить две цепи
-        mergeChains(srcNode, dstNode)
         val srcSubChain = srcNode.subChain
         val dstSubChain = dstNode.subChain
         if (srcSubChain != dstSubChain) {
             // Если разные подцепи соединяются мягкой связью, то они остаются разными
             // иначе подцепи сращиваются
             if (!bond.soft) {
-                val step = dstNode.pt - srcNode.pt - bond.dir!!
-                mergeSubChains(dstSubChain, srcSubChain, step)
+                // Если цепи разные, то их нужно объединить
+                val srcChain = srcNode.chain
+                val dstChain = dstNode.chain
+                if (srcChain != dstChain) {
+                    mergeChains(srcNode, dstNode)
+                    val step = dstNode.pt - srcNode.pt - bond.dir!!
+                    mergeSubChains(dstSubChain, srcSubChain, step)
+                } else {
+                    // Если цепь одна, но разные подцепи, то это переходная связь
+                    makeTransitionBond(bond)
+                }
             }
         } else {
             // Но если узлы в одной подцепи, то корректировать шаг связи
@@ -157,6 +172,7 @@ class ChainSys(val compiler: ChemCompiler) {
         curSubChainId = 0
         lastBond = null
     }
+
     fun closeSubChain() {
         curSubChainId = 0
         lastBond = null

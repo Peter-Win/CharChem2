@@ -75,10 +75,12 @@ class TestChains {
         val agent = expr.getAgents()[0]
         assertEquals(agent.nodes.size, 5)
         val (a, b, c, d, e) = agent.nodes
+        // Все узлы в одной цепи
         assertEquals(a.chain, b.chain)
         assertEquals(b.chain, c.chain)
         assertEquals(c.chain, d.chain)
         assertEquals(d.chain, e.chain)
+        // Подцепи: a, b-d-e, c
         assertNotEquals(a.subChain, b.subChain)
         assertNotEquals(b.subChain, c.subChain)
         assertEquals(b.subChain, d.subChain)
@@ -89,44 +91,63 @@ class TestChains {
     // d---c
     @Test
     fun testMergeSubChainsFromSameChain() {
-        val expr = compile("O-Ca|Mg`-S`|#1")
+        val expr = compile("{A}-{B}|{C}`-{D}`|#1")
         assertEquals(expr.getMessage(), "")
-        assertEquals(makeTextFormula(makeBrutto(expr)), "CaMgOS")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "ABCD")
         val agent = expr.getAgents()[0]
         assertEquals(agent.nodes.size, 4)
         val (a, b, c, d) = agent.nodes
-        assertNotEquals(a.subChain, b.subChain)
-        assertEquals(b.subChain, c.subChain)
-        assertNotEquals(c.subChain, d.subChain)
-        assertEquals(d.subChain, a.subChain)
-        assertEquals(a.pt, Point())
-        assertEquals(b.pt, Point())
-        assertEquals(c.pt, Point(0.0, 1.0))
-        assertEquals(d.pt, Point(0.0, 1.0))
-    }
-
-    // a<--d
-    // |   |
-    // b---c
-    @Test
-    fun testMergeSubChainsWithSoftBond() {
-        val expr = compile("O|S-Ca`|Mg`-#1")
-        assertEquals(expr.getMessage(), "")
-        assertEquals(makeTextFormula(makeBrutto(expr)), "CaMgOS")
-        val agent = expr.getAgents()[0]
-        assertEquals(agent.nodes.size, 4)
-        val (a, b, c, d) = agent.nodes
+        // All nodes in same chain
         assertEquals(a.chain, b.chain)
         assertEquals(b.chain, c.chain)
         assertEquals(c.chain, d.chain)
-        assertEquals(d.chain, a.chain)
-        assertEquals(a.subChain, b.subChain)
-        assertNotEquals(b.subChain, c.subChain)
-        assertEquals(c.subChain, d.subChain)
+        // 3 sub chains: a, b-c, d
+        assertNotEquals(a.subChain, b.subChain)
+        assertEquals(b.subChain, c.subChain)
+        assertNotEquals(c.subChain, d.subChain)
+        assertNotEquals(d.subChain, a.subChain)
         assertEquals(a.pt, Point())
-        assertEquals(b.pt, Point(0.0, 1.0))
-        assertEquals(c.pt, Point())
-        assertEquals(d.pt, Point(0.0, -1.0))
+        assertEquals(b.pt, Point())
+        assertEquals(c.pt, Point(0.0, 1.0))
+        assertEquals(d.pt, Point())
+        // last bond is transition
+        assertNull(agent.bonds.last().dir)
+    }
+
+    @Test
+    fun testMergeSubChainsWithSoftBond() {
+        // N
+        // |
+        // B<--K
+        // |   |
+        // C---F
+        val expr = compile("B|C-F`|K`-#1`|N")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "CBFKN")
+        val agent = expr.getAgents()[0]
+        assertEquals(agent.nodes.size, 5)
+        val (b, c, f, k, n) = agent.nodes
+        // Цепь у всех узлов одинаковая
+        assertEquals(b.chain, c.chain)
+        assertEquals(c.chain, f.chain)
+        assertEquals(f.chain, k.chain)
+        assertEquals(k.chain, n.chain)
+        // Должно быть две подцепи b-c-n и f-k
+        assertEquals(b.subChain, c.subChain)
+        assertEquals(c.subChain, n.subChain)
+        assertNotEquals(c.subChain, f.subChain)
+        assertEquals(f.subChain, k.subChain)
+
+        assertEquals(b.pt, Point())
+        assertEquals(c.pt, Point(0.0, 1.0))
+        assertEquals(f.pt, Point())
+        assertEquals(k.pt, Point(0.0, -1.0))
+        assertEquals(n.pt, Point(0.0, -1.0))
+        // Связь между k и b выполняет переход от одной подцепи к другой
+        val bondKB = expr.getAgents()[0].bonds[3]
+        assertEquals(bondKB.nodes[0], k)
+        assertEquals(bondKB.nodes[1], b)
+        assertNull(bondKB.dir)
     }
     @Test
     fun testEthanVertical() {

@@ -4,6 +4,14 @@ import charChem.math.Point
 import charChem.math.is0
 import kotlin.math.abs
 
+/**
+ * Возможные типы связей (это не химические свойства, а свойства структуры):
+ * - hard - наиболее типичный вариант. Связывает узлы в пределах одной подцепи. Координаты действительны.
+ * - soft - Связь между подцепями. Н.р. CH3-OH. Координаты узлов в разных системах координат. dir - относительный вектор, который используется при выводе графики в видовых координатх
+ * - transition - редкий случай перехода по ссылке от одной подцепи к другой в пределах одной цепи: O|H2C-CH2`|O_#1 (последняя)
+ * - ring
+ * - spline
+ */
 class ChemBond() : ChemObj() {
     var n: Double = 1.0 // multiplicity of the bond
     var nodes = mutableListOf<ChemNode?>(null, null)

@@ -15,6 +15,7 @@ fun onReferenceError(compiler: ChemCompiler, ref: String, pos: Int): Nothing {
 fun useRef(compiler: ChemCompiler, node: ChemNode) {
     val curBond = compiler.curBond
     if (curBond != null) {
+        curBond.soft = false
         curBond.nodes[1] = node
         compiler.chainSys.bondToRef(curBond)
     } else {

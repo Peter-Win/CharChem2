@@ -4,8 +4,6 @@ import charChem.compiler.ChemCompiler
 import charChem.core.ChemBond
 import charChem.core.ChemBracketEnd
 import charChem.core.ChemNode
-import charChem.inspectors.makeTextFormula
-import kotlin.math.roundToInt
 
 fun createCommonBond(compiler: ChemCompiler): ChemBond {
     val bond = ChemBond()
@@ -86,7 +84,7 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
     // - dir.isZero()
     // - связь мягкая и oldNode не является автоматическим узлом
     val dir = bond.dir
-    if (dir != null && !dir.isZero() && !(bond.soft && !oldNode.autoMode)) {
+    if (dir != null && !dir.isZero() && !bond.soft) {
         val pt = bond.calcPt()
         compiler.chainSys.findNode(pt)?.let { existsNode ->
             compiler.nodesBranch.onNode(existsNode)

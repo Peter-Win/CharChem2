@@ -51,7 +51,8 @@ fun autoCorrection(compiler: ChemCompiler, bond: ChemBond, slopeSign: Int) {
         return
     }
 
-    if (prevBond.isAuto && is0(prevBond.dir!!.y) && slopeSign != 0) {
+    val dir = prevBond.dir
+    if (prevBond.isAuto && dir!=null && is0(dir.y) && slopeSign != 0) {
         // Стыковка горизонтальной связи с наклонной
         correct(bond, compiler.varLength)
         return
