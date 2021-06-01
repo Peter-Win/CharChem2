@@ -110,6 +110,8 @@ fun parseBondMultiplicity(compiler: ChemCompiler, bond: ChemBond, param: UniBond
             bond.align = getMode()
         }
         bond.n = 2.0
+    } else if (value.isEmpty()) {
+        bond.n = 1.0
     } else {
         bond.n = parseNum(compiler, value, param.valuePos)
     }

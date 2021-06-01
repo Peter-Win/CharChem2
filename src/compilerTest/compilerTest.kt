@@ -18,6 +18,11 @@ val bruttoExceptions = mapOf(
         "605" to "CO3{R1}{R2}",
         "756" to "NO2{R}",
         "757" to "NO2{R}",
+        "1078" to "C8H20F2O4P2",
+        "1115" to "O3S{R}2",
+        "1116" to "O3S{R}{R'}",
+        "1284" to "CN{R}",
+        "1550" to "C6H12CaNO9^-",
 )
 
 fun compilerTest() {

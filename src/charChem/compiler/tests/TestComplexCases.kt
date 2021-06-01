@@ -230,4 +230,11 @@ class TestComplexCases {
         assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C14H10")
     }
+
+    @Test
+    fun testIsobacteriochlorin() {
+        // _(a54,N)
+        val expr = compile("|_q:a2_qN_qq<_(a54):a>_q; `-_q<_(a54,N2)#a>_qN_qq<_(a54,N):b>_q; `||_q<_(a54,N2)#b>_qN<`-H>_q<_(a54,N2):c>_q; -_qq<_(a54)#c>_qN<`|H>_q<_(a54)=#a2>_qq")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C20H18N4")
+    }
 }
