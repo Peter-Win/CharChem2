@@ -3,6 +3,7 @@ package charChem.core
 import charChem.math.Point
 import charChem.math.is0
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 /**
  * Возможные типы связей (это не химические свойства, а свойства структуры):
@@ -79,4 +80,15 @@ class ChemBond() : ChemObj() {
     }
 
     fun isHorizontal(): Boolean = dir?.let { !is0(it.x) && is0(it.y) } ?: false
+
+    fun debugText(): String {
+        fun bondTextStd(it: ChemBond) = "${it.nodes[0]?.index}" +
+                "(${if (it.soft) "~" else ""}${it.dir!!.polarAngleDeg().roundToInt()}" +
+                "${if (it.n != 1.0) "*${it.n.roundToInt()}" else ""})" +
+                "${it.nodes[1]?.index}"
+
+        fun bondTextExt(bond: ChemBond) = "${bond.linearText()}${bond.nodes.map { it?.index }}"
+
+        return if (nodes.size == 2) bondTextStd(this) else bondTextExt(this)
+    }
 }

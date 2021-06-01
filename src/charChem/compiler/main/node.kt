@@ -14,6 +14,26 @@ fun closeNode(compiler: ChemCompiler) {
 }
 
 fun openNode(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
+    compiler.curBond?.let { bond ->
+        val dir = bond.dir
+        if (dir != null && !dir.isZero() && !bond.soft) {
+            val pt = bond.calcPt()
+            compiler.chainSys.findNode(pt)?.let { existsNode ->
+                compiler.nodesBranch.onNode(existsNode)
+                if (!bond.soft || existsNode.autoMode) {
+                    if (bond.middlePoints == null) {
+                        val oldNode = bond.nodes[0]!!
+                        findBondBetweenNodes(compiler, oldNode, existsNode)?.let { oldBond ->
+                            mergeBonds(compiler, oldBond, bond, existsNode)
+                            return existsNode
+                        }
+                    }
+                }
+                bindNodeToBond(compiler, existsNode, bond)
+                return existsNode
+            }
+        }
+    }
     closeNode(compiler)
     checkMiddlePoints(compiler)
     val node = compiler.curAgent!!.addNode(ChemNode())

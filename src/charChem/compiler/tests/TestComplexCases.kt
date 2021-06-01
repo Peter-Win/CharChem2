@@ -230,29 +230,4 @@ class TestComplexCases {
         assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C14H10")
     }
-    @Test
-    fun testCorannulene() {
-        //       4===3
-        //      /     \
-        // 6---5       2
-        // //  \\     //
-        // 7     0---1
-        //  \   /     \
-        //   9==8     6
-        //        \ /
-        //         7
-        val expr = compile("-/`\\`=`/\\-0_p_p_p_p-#6_q_qq6_q6:l=#9;#2/#3_p_pp6_p6:r=#7;#8|_p_pp6_#l;#8|_q_qq6_#r")
-        assertEquals(expr.getMessage(), "")
-        val agent = expr.getAgents()[0]
-        // check single subChain
-        val subChain = agent.nodes[0].subChain
-        assertEquals(agent.nodes.filter { it.subChain != subChain }.map { it.index }, listOf() )
-
-        val needBonds = listOf(
-                "0:0(0)1", "1:1(-60*2)2", "2:3(180*2)4", "3:4(120)5", "4:5(60*2)0",
-
-        )
-        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
-        assertEquals(makeTextFormula(makeBrutto(expr)), "C20H10")
-    }
 }

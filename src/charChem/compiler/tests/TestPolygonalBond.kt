@@ -11,13 +11,21 @@ import kotlin.test.assertEquals
 class TestPolygonalBond {
     @Test
     fun testSimpleP() {
+        //    _p+_p
+        //    0===1
+        //_p /     \ _p5
+        // 4 O     2
+        //  _p \3// _pp
         val expr = compile("_p_p5_pp_pO_p_p")
         // Последний сегмент накладывается на первый с образованием двойной связи
         assertEquals(expr.getMessage(), "")
-        val bonds = expr.getAgents()[0].bonds
+        val agents = expr.getAgents()[0]
+        val bonds = agents.bonds
         assertEquals(bonds.map { it.dir!!.polarAngleDeg().roundToInt() },
             listOf(0, 72, 144, -144, -72))
         assertEquals(bonds.map { it.n }, listOf(2.0, 1.0, 2.0, 1.0, 1.0))
+        assertEquals(agents.nodes.map { makeTextFormula(makeBrutto(it)) },
+                listOf("CH", "CH", "CH", "CH", "O"))
         assertEquals(makeTextFormula(makeBrutto(expr)), "C4H4O")
     }
     @Test

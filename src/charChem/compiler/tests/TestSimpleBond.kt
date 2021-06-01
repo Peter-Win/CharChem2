@@ -124,10 +124,10 @@ class TestSimpleBond {
         assertEquals(agent.nodes.size, 5)
         assertEquals(agent.bonds.size, 5)
         assertEquals(agent.bonds[0].n, 2.0)
-        assertEquals(agent.nodes[0].bonds.size, 1)
-        assertTrue(agent.bonds[0] in agent.nodes[0].bonds)
-        assertEquals(agent.nodes[1].bonds.size, 3)
-        assertTrue(agent.bonds[0] in agent.nodes[1].bonds)
+        assertEquals(agent.nodes[0].bonds.map { it.debugText() }, listOf("0(0*2)1"))
+        assertEquals(agent.nodes[1].bonds.map { it.debugText() }, listOf(
+                "0(0*2)1", "1(90)2", "4(180)1"
+        ))
     }
 
     @Test

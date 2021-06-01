@@ -79,26 +79,10 @@ fun onOpenBond(compiler: ChemCompiler, bond: ChemBond) {
         bond.soft = false
     }
     bond.color = compiler.varColor
-    // Здесь можно сделать предположение о том, что связь входит вкакой-либо из узлов своей подцепи
-    // Это предположение неверно для случаев:
-    // - dir.isZero()
-    // - связь мягкая и oldNode не является автоматическим узлом
-    val dir = bond.dir
-    if (dir != null && !dir.isZero() && !bond.soft) {
-        val pt = bond.calcPt()
-        compiler.chainSys.findNode(pt)?.let { existsNode ->
-            compiler.nodesBranch.onNode(existsNode)
-            if (!bond.soft || existsNode.autoMode) {
-                if (bond.middlePoints == null) {
-                    findBondBetweenNodes(compiler, oldNode, existsNode)?.let { oldBond ->
-                        mergeBonds(compiler, oldBond, bond, existsNode)
-                        return
-                    }
-                }
-                bindNodeToBond(compiler, existsNode, bond)
-            }
-        }
-    }
+    /*
+    Здесь нельзя делать предположений о том, какой будет узел на другом конце.
+    Хотя вектор уже известен, но далее может появиться ссылка и связь может стать переходной.
+     */
     compiler.curAgent!!.addBond(bond)
     compiler.curBond = bond
     compiler.chainSys.addBond(bond)
@@ -112,5 +96,8 @@ fun mergeBonds(compiler: ChemCompiler, oldBond: ChemBond, newBond: ChemBond, new
     compiler.curBond = oldBond
     // TODO: Возможно, здесь стоило бы пометить newBond, что его нельзя корректировать
     newBond.soft = false
+    newBond.nodes[1] = newNode
     compiler.chainSys.addBond(newBond)
+    compiler.curAgent!!.bonds.remove(newBond)
+    compiler.curAgent!!.commands.remove(newBond)
 }
