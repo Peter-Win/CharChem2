@@ -16,6 +16,10 @@ fun closeNode(compiler: ChemCompiler) {
 fun openNode(compiler: ChemCompiler, isAuto: Boolean = false): ChemNode {
     compiler.curBond?.let { bond ->
         val dir = bond.dir
+        if (bond.soft && isAuto) {
+            // if second node of bond is auto, then bond is not soft
+            changeBondToHard(compiler, bond)
+        }
         if (dir != null && !dir.isZero() && !bond.soft) {
             val pt = bond.calcPt()
             compiler.chainSys.findNode(pt)?.let { existsNode ->

@@ -237,4 +237,27 @@ class TestComplexCases {
         val expr = compile("|_q:a2_qN_qq<_(a54):a>_q; `-_q<_(a54,N2)#a>_qN_qq<_(a54,N):b>_q; `||_q<_(a54,N2)#b>_qN<`-H>_q<_(a54,N2):c>_q; -_qq<_(a54)#c>_qN<`|H>_q<_(a54)=#a2>_qq")
         assertEquals(makeTextFormula(makeBrutto(expr)), "C20H18N4")
     }
+    @Test
+    fun testMalonicAcid() {
+        //       OH 0
+        //      /
+        // O=== 1      O 5
+        // 2    \    //
+        //       3---4
+        //            \
+        //             OH 6
+        // Bond #1 is result of merge of two pseudo-soft bond descriptions
+        val expr = compile("OH`/`-O-\\-<//O>\\OH")
+        val agent = expr.getAgents()[0]
+        val node0 = agent.nodes[0]
+        // all nodes in same chain
+        assertEquals(agent.nodes.filter { it.chain != node0.chain}. map { it.index }, listOf())
+        // all nodes in same sub chain
+        assertEquals(agent.nodes.filter { it.subChain != node0.subChain}. map { it.index }, listOf())
+        val needNodes = listOf("0:OH", "1:C", "2:O", "3:CH2", "4:C", "5:O", "6:OH")
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        val needBonds = listOf("0:0(120)1", "1:1(180*2)2", "2:1(60)3", "3:3(0)4", "4:4(-60*2)5", "5:4(60)6")
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C3H4O4")
+    }
 }

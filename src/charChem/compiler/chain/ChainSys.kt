@@ -164,6 +164,8 @@ class ChainSys(val compiler: ChemCompiler) {
                 }
                 mergeSubChains(dstNode.subChain, srcNode.subChain, bond.dir ?: Point())
             }
+            curSubChainId = dstNode.subChain
+            curChainId = dstNode.chain
         }
     }
 

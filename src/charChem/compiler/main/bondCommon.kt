@@ -11,6 +11,11 @@ fun createCommonBond(compiler: ChemCompiler): ChemBond {
     return bond
 }
 
+fun changeBondToHard(compiler: ChemCompiler, bond: ChemBond) {
+    bond.soft = false
+    compiler.chainSys.changeBondToHard(bond)
+}
+
 fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     compiler.curNode = node
 
@@ -19,8 +24,7 @@ fun bindNodeToBond(compiler: ChemCompiler, node: ChemNode, chemBond: ChemBond) {
     val auto0: Boolean = node0?.autoMode ?: false
     // Если хотя бы один узел автоматический, то связь не мягкая
     if (chemBond.soft && (auto0 || node.autoMode)) {
-        chemBond.soft = false
-        compiler.chainSys.changeBondToHard(chemBond)
+        changeBondToHard(compiler, chemBond)
     }
     if (chemBond.soft) {
         compiler.nodesBranch.onSubChain()
