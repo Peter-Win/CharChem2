@@ -24,7 +24,7 @@ fun calcCharge(obj: ChemObj): Double {
         override fun agentPost(obj: ChemAgent) = pop { obj.n.num }
         override fun bracketBegin(obj: ChemBracketBegin) = push()
         override fun bracketEnd(obj: ChemBracketEnd) {
-            obj.charge?.let { stack[0] += it.value }
+            obj.charge?.let { stack[0] = it.value }
             pop { obj.n.num }
         }
 

@@ -4,6 +4,7 @@ import charChem.compiler.compile
 import charChem.core.PeriodicTable
 import charChem.inspectors.calcMass
 import charChem.inspectors.isAbstract
+import charChem.inspectors.makeBrutto
 import charChem.inspectors.makeTextFormula
 import org.testng.annotations.Test
 import kotlin.test.assertEquals
@@ -33,5 +34,13 @@ class TestRadical {
         assertEquals(makeTextFormula(expr), "i-BuOH")
         val m = PeriodicTable.C.mass * 4 + PeriodicTable.H.mass * 10 + PeriodicTable.O.mass
         assertEquals(calcMass(expr), m)
+    }
+    @Test
+    fun testAcetylCoA() {
+        // https://en.wikipedia.org/wiki/Acetyl-CoA
+        val expr = compile("{Ac}S{CoA}")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C23H38N7O17P3S")
+        assertEquals(makeTextFormula(makeBrutto(compile("{CoA}SH"))), "C21H36N7O16P3S")
     }
 }

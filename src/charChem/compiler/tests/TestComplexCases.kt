@@ -5,16 +5,22 @@ import charChem.core.ChemBond
 import charChem.core.ChemExpr
 import charChem.core.ChemNode
 import charChem.core.ChemObj
+import charChem.inspectors.calcCharge
 import charChem.inspectors.makeBrutto
+import charChem.inspectors.makeElemList
 import charChem.inspectors.makeTextFormula
 import charChem.textRules.rulesCharChem
 import org.testng.annotations.Test
 import kotlin.math.roundToInt
 import kotlin.test.assertEquals
 
-private fun nodeCvt(node: ChemNode): ChemObj = if (node.autoMode) makeBrutto(node) else node
+private fun chargeCheck(node: ChemNode): ChemObj = node.charge?.let{
+    compile(makeElemList(node).toString())
+} ?: node
 
-private fun nodeText(node: ChemNode): String = "${node.index}:${makeTextFormula(nodeCvt(node))}"
+private fun nodeCvt(node: ChemNode): ChemObj = if (node.autoMode) makeBrutto(node) else chargeCheck(node)
+
+private fun nodeText(node: ChemNode): String = "${node.index}:${makeTextFormula(nodeCvt(node), rulesCharChem)}"
 
 private fun makeNodesText(expr: ChemExpr) = expr.getAgents()[0].nodes.map { nodeText(it) }
 
@@ -198,9 +204,9 @@ class TestComplexCases {
         val expr = compile("O^-`/`\\O\\|\\N|`/|O`|`\\HO;#N/\\/N<`|/`|O|\\OH_(x1,y1,N0,TSpace)[Na^+]2>\\|\\O`\\`/O^-")
         assertEquals(expr.getMessage(), "")
         val needNodes = listOf(
-                "0:O-", "1:C", "2:O", "3:CH2", "4:N", "5:CH2", "6:C", "7:O", "8:HO", "9:CH2",
-                "10:CH2", "11:N", "12:CH2", "13:C", "14:O", "15:OH", "16:Na+", "17:CH2",
-                "18:C", "19:O", "20:O-"
+                "0:O^-", "1:C", "2:O", "3:CH2", "4:N", "5:CH2", "6:C", "7:O", "8:HO", "9:CH2",
+                "10:CH2", "11:N", "12:CH2", "13:C", "14:O", "15:OH", "16:Na^+", "17:CH2",
+                "18:C", "19:O", "20:O^-"
         )
         assertEquals(diff(makeNodesText(expr), needNodes), listOf())
         val needBonds = listOf(
@@ -259,5 +265,35 @@ class TestComplexCases {
         val needBonds = listOf("0:0(120)1", "1:1(180*2)2", "2:1(60)3", "3:3(0)4", "4:4(-60*2)5", "5:4(60)6")
         assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C3H4O4")
+    }
+    @Test
+    fun testPulegone() {
+        // Merge bonds after bracket declaration
+        //            O 4  6 7
+        //            ||   C(CH3)2
+        //          2/3 \5//
+        //          |    |
+        //      0  /1\  /8
+        //      H3C    9
+        val expr = compile("H3C/`|/`|O|\\/C<(CH3)2>`/|`/`\\")
+        assertEquals(expr.getMessage(), "")
+        val needBonds = listOf(
+                "0:0(-30)1", "1:1(-90)2", "2:2(-30)3", "3:3(-90*2)4", "4:3(30)5",
+                "5:5(-30*2)6", "6:5(90)8", "7:8(150)9", "8:9(-150)1"
+        )
+        assertEquals(diff(makeBondsInfo(expr), needBonds), listOf())
+        val needNodes = listOf("0:H3C", "1:CH", "2:CH2", "3:C", "4:O", "5:C", "6:C", "7:CH3", "8:CH2", "9:CH2")
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C10H16O")
+    }
+    @Test
+    fun testHydrogenHexachlororhenateIV() {
+        val expr = compile("\$ver(1.0)[Re^4+\$slope(60)\$L(1.4)<--hCl^-></hCl^-><`\\hCl`^-><`-hCl`^-><`/hCl`^-><\\hCl^->]^2-; H^+_(x%w:3,y.5,N0)#Re; H^+_(x%w:3,y-.5,N0)#Re")
+        assertEquals(expr.getMessage(), "")
+        val needNodes = listOf(
+                "0:Re^4+", "1:Cl^-", "2:Cl^-", "3:Cl^-", "4:Cl^-", "5:Cl^-", "6:Cl^-", "7:H^+", "8:H^+")
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        assertEquals(calcCharge(expr), 0.0)
+        assertEquals(makeTextFormula(makeBrutto(expr)), "H2Cl6Re")
     }
 }

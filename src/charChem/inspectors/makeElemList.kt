@@ -27,7 +27,7 @@ fun makeElemList(obj: ChemObj): ElemList {
 
         override fun bracketBegin(obj: ChemBracketBegin) = push()
         override fun bracketEnd(obj: ChemBracketEnd) {
-            stack[0].charge += obj.charge?.value ?: 0.0
+            obj.charge?.let { stack[0].charge = it.value }
             pop(obj.n.num)
         }
 
