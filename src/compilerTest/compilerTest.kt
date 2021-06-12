@@ -84,6 +84,7 @@ val bruttoExceptions = mapOf(
         "15360" to "AgO",
         "15629" to "H4O9Re2",
         "15630" to "H4O9Re2",
+        "15774" to "Cl9Re3",
 )
 
 fun compilerTest() {

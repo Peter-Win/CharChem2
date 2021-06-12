@@ -52,7 +52,7 @@ fun findBondBetweenNodes(compiler: ChemCompiler, nodeA: ChemNode, nodeB: ChemNod
     }
 }
 
-fun getNodeForBondStart(compiler: ChemCompiler, bond: ChemBond): ChemNode {
+fun getNodeForBondStart(compiler: ChemCompiler, bond: ChemBond?): ChemNode {
     val curNode = compiler.curNode
     if (curNode != null) {
         // Если текущий узел есть, то использовать его

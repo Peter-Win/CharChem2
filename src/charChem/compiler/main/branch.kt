@@ -11,12 +11,8 @@ class BranchDecl(pos: Int, val node: ChemNode, val bond: ChemBond?) : StackItem(
 
 // Указатель установлен на символ < или * для случая (*
 fun openBranch(compiler: ChemCompiler): Int {
-    if (compiler.curNode == null) {
-        openNode(compiler, true)
-    }
-    compiler.curNode?.let { node ->
-        compiler.push(BranchDecl(compiler.pos, node, compiler.curBond))
-    }
+    val curNode: ChemNode = getNodeForBondStart(compiler, null)
+    compiler.push(BranchDecl(compiler.pos, curNode, compiler.curBond))
     compiler.chainSys.onBranchBegin()
     compiler.nodesBranch.onBranchBegin()
     return compiler.setState(::stateAgentMid, 1)

@@ -2,10 +2,7 @@ package charChem.compiler.tests
 
 import charChem.compiler.compile
 import charChem.core.*
-import charChem.inspectors.calcMass
-import charChem.inspectors.isAbstract
-import charChem.inspectors.makeBrutto
-import charChem.inspectors.makeTextFormula
+import charChem.inspectors.*
 import charChem.lang.Lang
 import charChem.math.Point
 import charChem.math.roundMass
@@ -220,7 +217,23 @@ class TestBrackets {
     }
     @Test
     fun testConnectOfLastNodeInBracketsWithNextBond() {
+        //   ┌    O 2   ┐
+        //   |    ||    |    2+
+        //   |   /1 \   |  Mg
+        //   └ HO    O- ┘2  4
+        //      0    3
         val expr = compile("[HO/`|O|\\O^-]2_(x1.6,y#-1;-2,N0)Mg^2+")
         assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C2H2MgO6")
+        assertEquals(calcCharge(expr), 0.0)
+    }
+    @Test
+    fun testBranchAfterBracket() {
+        //  ┌    ┐/I
+        //  | Mg<|
+        //  └    ┘\I
+        val expr = compile("[Mg]<_(x2,y-1)I><_(x2,y1)I>")
+        assertEquals(expr.getMessage(), "")
+        assertEquals(makeTextFormula(makeBrutto(expr)), "I2Mg")
     }
 }

@@ -296,4 +296,15 @@ class TestComplexCases {
         assertEquals(calcCharge(expr), 0.0)
         assertEquals(makeTextFormula(makeBrutto(expr)), "H2Cl6Re")
     }
+    @Test
+    fun testDihexacyanoferrateII() {
+        val expr = compile("\$ver(1.0)[Fe^2+@:b(a,c)<_(A&a,L1.3,H)C&c^-_(a0,N3)N>@(-90)@b(-30,`)@b(30)@b(90)@b(150,`)@b(-150)]<_(x%w:-4,N0,y-%h:.8)K^+><_(x%w,y%h,N0)Fe^3+>")
+        assertEquals(expr.getMessage(), "")
+        val needNodes = listOf(
+                "0:Fe^2+", "1:C^-", "2:N", "3:C^-", "4:N", "5:C^-", "6:N", "7:C^-", "8:N", "9:C^-",
+                "10:N", "11:C^-", "12:N", "13:K^+", "14:Fe^3+"
+        )
+        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C6Fe2KN6")
+    }
 }
