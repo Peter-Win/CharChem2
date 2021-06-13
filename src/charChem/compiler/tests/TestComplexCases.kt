@@ -307,4 +307,15 @@ class TestComplexCases {
         assertEquals(diff(makeNodesText(expr), needNodes), listOf())
         assertEquals(makeTextFormula(makeBrutto(expr)), "C6Fe2KN6")
     }
+    @Test
+    fun test5837() {
+        val expr = compile("`\\`-_(a54)_q_p6_pp6_p6_pp6_p6_p6_qHN_q_qq; #1-<\\\\O>/N_(a54)<_q_q_q_q>_(a54,w+)<_pp6O>_q6N<_(y-.5)H>_(a60,d-)<_p6_q6_p6<_pp6O>_q6OH>_q6<_pp6O>_q6HN_p6<_(a60,d+)>_q6<_qq6O>_p6NH_(a-60,d-)<_p6_p6<_p6NH2>_qq6O>_q6<_qq6O>_p6NH_(a-60,w-)<_q6_q6_p6_q6_p6H2N>_p6<_qq6O>_p6NH_(a-60,w-)<_q6<_q6>_p6>_p6<_pp6O>_q6HN_p6_q6<_qq6O>_p6NH2; #1`/wHN\\<=O>`/<\\-_(a54)_qNH_q_qN<_(y-.5)H>_q>`-dHN`/<\\\\O>`-<`\\/<=O>`\\HO>`/wNH`-<`\\\\O>`/<\\`/\\`/\\NH2>`-dHN`/<\\\\O>`-<`\\/<=O>`\\H2N>`/wNH`-<`\\\\O>_(a-60,d-)_(a54)N<_q_q_q_q>_(a54)<_pp6O>_q6<_p6_p6<_qq6O>_p6NH2>_(a-60,w+)NH_p6<_pp6O>_q6<_p6_p6_pp6_q6_qq6_q6_qq6_q6>_(a-60,w+)NH_p6<_pp6O>_q6<_q6_(a-50)<_pp6O>_q6OH>_(a60,d+)HN_q6<_qq6O>_p6<_p6_p6_(a54,N2)_qN<_(y-.5)H>_q_qq<_q>_p6_pp6_p6_pp6_p6>_(a-60,w+)NH_p6<_pp6O>_q6<_p6_p6<_pp6O>_q6HO>_(a-60,w+)N<_(y-.5)H>_p6:a_pp6O; `-_q<_(a54,d+)#a>_qN<_q_q>|`/O/\\</\\|O`|/NH2>|dN<_(y.5)H>`/`\\O\\|<\\/`|O|\\NH2>`/dHN|\\O`\\`/<`\\`|HO>|wN<_(y.5)H>`/`\\O\\|<\\/`|O|\\NH2>`/dHN|\\O`\\`/<`\\w>|NH`/`\\O\\|`/HN|\\O`\\`/<`\\`|/`||`\\`//|\\\\>|wNH`/`\\O\\|<\\d>`/HN|\\O`\\_(a-60,w-)_(a54)_q_q_qN<_q>_(a54)<_qq6O>_p6<_p6_q6<_pp6O>_q6OH>_(a-60,w+)N<_(y.5)H>_q6<_qq6O>_p6<_p6_p6<_p6>_q6>_(a-60,w+)N<_(y-.5)H>_p6<_pp6O>_q6<_q6_p6_q6<_qq6O>_p6NH2>_(a60,d+)N<_(y-.5)H>_q6<_qq6O>_p6<_p6_p6_(a54)N<_(y.5)H>_q_qHN_q_q>_(a-60,w+)N<_(y-.5)H>_p6<_pp6O>_q6<_p6_p6<_pp6O>_q6OH>_(a-60,w+)HN_p6<_pp6O>_(a-60,d-)_(a54)N<_q_q_q_q>\\|O`|/<_(y-1.6)/\\//`|`\\\\`/||>\\dN<_(y.5)H>/`|O|\\<|`/`\\`//|\\\\/`||>/wN<_(y-.5)H>\\|O`|/\\N<_(y.5)H>/`|O|\\</`|<`\\>/>|dHN\\<//O>_(a60,d-)_(a54)N<_q_q_q_q>_(a54)<_pp6O>_q6<_p6_p6<_qq6O>_p6N_(y.5)H2>_(a-60,w+)NH_p6<_pp6O>_(a-60,w-)_(a54)_q_q_qN<_q>/`|O|\\<|<`/>\\>/wN<_(y-.5)H>\\|O`|/<`|d`\\HO>\\N<_(y.5)H>/`|O|\\<|w`/<_p7>_q6>/N<_(y.5)H>\\|O`|/<`|d`\\`|O|`/H2N>\\N<_(y.5)H>/`|O|\\<|<\\dOH>`/>/wN<_(y-.5)H>\\|O`|/\\N<_(y.5)H>/`|O|\\/\\/\\/\\/\\/\\/\\")
+        assertEquals(expr.getMessage(), "")
+//        val needNodes = listOf(
+//                "0:CH", "1:CH2", "2:C", "3:C", "4:C", "5:CH", "6:CH", "7:CH", "8:CH", "9:HN",
+//                "10:CH",
+//        )
+//        assertEquals(diff(makeNodesText(expr), needNodes), listOf())
+        assertEquals(makeTextFormula(makeBrutto(expr)), "C248H363N65O72")
+    }
 }

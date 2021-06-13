@@ -85,17 +85,18 @@ val bruttoExceptions = mapOf(
         "15629" to "H4O9Re2",
         "15630" to "H4O9Re2",
         "15774" to "Cl9Re3",
+        "16768" to "C14H30Fe3O18",
 )
 
 fun compilerTest() {
     println("=== start compiler test ===")
-    val main = loadTable("C:\\backup\\CharChem\\21-05-28-1\\subst_main.data")
+    val main = loadTable("C:\\backup\\CharChem\\21-06-13-1\\subst_main.data")
     val bruttoIndex = mutableMapOf<String, String?>()
     main.forEach {
         val substId = it[0] ?: throw Error("Invalid substance id $it")
         bruttoIndex[substId] = it[1]
     }
-    val formulas = loadTable("C:\\backup\\CharChem\\21-05-28-1\\subst_formula.data")
+    val formulas = loadTable("C:\\backup\\CharChem\\21-06-13-1\\subst_formula.data")
     println("Loaded formulas = ${formulas.size}")
     formulas.forEach{ row ->
         val formulaId = row[0] ?: throw Error("Invalid formula id in $row")
