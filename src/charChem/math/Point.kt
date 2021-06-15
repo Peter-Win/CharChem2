@@ -30,6 +30,11 @@ class Point(var x: Double = 0.0, var y: Double = 0.0) {
     operator fun plus(pt: Point): Point =
             Point(x + pt.x, y + pt.y)
 
+    fun add(deltaX: Double, deltaY: Double) {
+        x += deltaX
+        y += deltaY
+    }
+
     operator fun minus(pt: Point): Point =
             Point(x - pt.x, y - pt.y)
 
